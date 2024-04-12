@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f260c78cfeedd0141aade70bc4ee2753, type: 3}
+  m_Name: New Bingo Ex So
+  m_EditorClassIdentifier: 
+  names:
+  - "\uAC15\uC9C0\uD5CC"
+  - "\uACFD\uC11D\uD604"
+  - "\uACFD\uD604\uBBFC"
+  - "\uAE40\uBBFC\uC218"
+  - "\uAE40\uC131\uD638"
+  - "\uBC15\uC131\uBE48"
+  - "\uBC15\uC6B0\uD601"
+  - "\uBC15\uD604\uC6B1"
+  - "\uC548\uD615\uC8FC"
+  - "\uC624\uC900\uC120"
+  - "\uC624\uC9C0\uD64D"
+  - "\uC774\uACBD\uC724"
+  - "\uC774\uBBFC\uCC44"
+  - "\uC774\uC900\uC11C"
+  - "\uC784\uC5EC\uC9C4"
+  - "\uC815\uBBFC\uAD50"
+  - "\uCD5C\uB300\uC6D0"
+  - "\uCD5C\uC6D0\uC11D"
+  - "\uD64D\uBBFC\uD601"
+  - "\uD669\uC6D0\uC900"
