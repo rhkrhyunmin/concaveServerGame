@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using DummyClient;
 using TMPro;
+using System.Linq;
 
 public class Bingo : MonoBehaviour
 {
@@ -99,7 +100,7 @@ public class Bingo : MonoBehaviour
     private static float WINDOW_HEIGHT = 480.0f;
 
     //사람 이름 입력
-    public TextMeshProUGUI _InputNameTxt;
+    public TMP_InputField _NameInputField;
 
     public BingoExSo _BingoExample;
 
@@ -200,14 +201,40 @@ public class Bingo : MonoBehaviour
             //둘 수 없을 때 누르면 클릭용 사운드 효과를 냅니다.
             if(Input.GetKeyDown(KeyCode.KeypadEnter)) 
             {
-                //리스트 해서 하기 알잘딱 ㅇㅋ?
-                if(_InputNameTxt)
+                if (_NameInputField != null)
                 {
+                    string inputName = _NameInputField.text; // _InputNameTxt에서 텍스트 가져오기
+                    if (!string.IsNullOrEmpty(inputName))
+                    {
+                        if (_BingoExample != null && _BingoExample.names != null && _BingoExample.names.Any())
+                        {
+                            if (_BingoExample.names.Contains(inputName))
+                            {
+                  
+                                Debug.Log("입력한 이름이 리스트에 있습니다.");
+                            }
+                            else
+                            {
                    
+                                Debug.Log("입력한 이름이 리스트에 없습니다.");
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogWarning("BingoExSo 또는 이름 리스트가 유효하지 않습니다.");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("입력한 이름이 비어 있습니다.");
+                    }
+                }
+                else
+                {
+                    // _InputNameTxt가 할당되지 않음
+                    Debug.LogWarning("_InputNameTxt가 할당되지 않았습니다.");
                 }
             }
-            //여기사다가 입력받고 하기
-             
         }
 
         if (setMark == false)
