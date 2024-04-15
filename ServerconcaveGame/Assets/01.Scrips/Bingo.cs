@@ -5,6 +5,7 @@ using System.Collections;
 using DummyClient;
 using TMPro;
 using System.Linq;
+using System.Collections.Generic;
 
 public class Bingo : MonoBehaviour
 {
@@ -103,6 +104,7 @@ public class Bingo : MonoBehaviour
     public TMP_InputField _NameInputField;
 
     public BingoExSo _BingoExample;
+    public RandomBingo _RandomBingo;
 
 
     // Use this for initialization
@@ -183,7 +185,7 @@ public class Bingo : MonoBehaviour
 
     void UpdateTurn()
     {
-        Debug.Log($"턴 시작 :{turn}");
+        //Debug.Log($"턴 시작 :{turn}");
         bool setMark = false;
         if (turn == localMark)
         {
@@ -199,42 +201,7 @@ public class Bingo : MonoBehaviour
         {
             setMark = DoOppnentTurn();
             //둘 수 없을 때 누르면 클릭용 사운드 효과를 냅니다.
-            if(Input.GetKeyDown(KeyCode.KeypadEnter)) 
-            {
-                if (_NameInputField != null)
-                {
-                    string inputName = _NameInputField.text; // _InputNameTxt에서 텍스트 가져오기
-                    if (!string.IsNullOrEmpty(inputName))
-                    {
-                        if (_BingoExample != null && _BingoExample.names != null && _BingoExample.names.Any())
-                        {
-                            if (_BingoExample.names.Contains(inputName))
-                            {
-                  
-                                Debug.Log("입력한 이름이 리스트에 있습니다.");
-                            }
-                            else
-                            {
-                   
-                                Debug.Log("입력한 이름이 리스트에 없습니다.");
-                            }
-                        }
-                        else
-                        {
-                            Debug.LogWarning("BingoExSo 또는 이름 리스트가 유효하지 않습니다.");
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogWarning("입력한 이름이 비어 있습니다.");
-                    }
-                }
-                else
-                {
-                    // _InputNameTxt가 할당되지 않음
-                    Debug.LogWarning("_InputNameTxt가 할당되지 않았습니다.");
-                }
-            }
+            
         }
 
         if (setMark == false)
@@ -301,7 +268,34 @@ public class Bingo : MonoBehaviour
         {
             //
             // 마우스의 왼쪽 버튼의 눌린 상태를 감시합니다.
-            bool isClicked = Input.GetMouseButtonDown(0);
+            bool isClicked = Input.GetKeyDown(KeyCode.Space);
+            if (isClicked == true)
+            {
+                if (_NameInputField != null)
+                {
+                    Debug.Log(_RandomBingo.selectedItems.Count);
+                    if (_RandomBingo.selectedItems != null && _RandomBingo.selectedItems.Count > 0)
+                    {
+                        string inputName = _NameInputField.text; // 사용자의 입력 이름 가져오기
+
+                        List<string> selectedItems = _RandomBingo.selectedItems; // 선택된 아이템 리스트 가져오기
+
+                        if (selectedItems.Contains(inputName))
+                        {
+                            Debug.Log("입력한 이름이 리스트에 있습니다.");
+                        }
+                        else
+                        {
+                            Debug.Log("입력한 이름이 리스트에 없습니다.");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("선택된 아이템이 없거나, selectedItems 리스트가 null입니다.");
+                    }
+                }
+            }
+
             if (isClicked == false)
             {
                 // 눌려지지 않았으므로 아무것도 하지 않지 않습니다.
