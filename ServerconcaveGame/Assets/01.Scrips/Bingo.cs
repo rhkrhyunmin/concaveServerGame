@@ -6,6 +6,7 @@ using DummyClient;
 using TMPro;
 using System.Linq;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class Bingo : MonoBehaviour
 {
@@ -102,6 +103,7 @@ public class Bingo : MonoBehaviour
 
     //사람 이름 입력
     public TMP_InputField _NameInputField;
+    public GameObject cube;
 
     public BingoExSo _BingoExample;
     public RandomBingo _RandomBingo;
@@ -249,6 +251,44 @@ public class Bingo : MonoBehaviour
         }
     }
 
+    public void Numcheck()
+    {
+        bool isClicked = Input.GetKeyDown(KeyCode.Space);
+        if (isClicked == true)
+        {
+            if (_NameInputField != null)
+            {
+                Debug.Log(_RandomBingo.selectedItems.Count);
+                if (_RandomBingo.selectedItems != null && _RandomBingo.selectedItems.Count > 0)
+                {
+                    string inputName = _NameInputField.text; // 사용자의 입력 이름 가져오기
+
+                    List<string> selectedItems = _RandomBingo.selectedItems; // 선택된 아이템 리스트 가져오기
+
+                    if (selectedItems.Contains(inputName))
+                    {
+                        Debug.Log("입력한 이름이 리스트에 있습니다.");
+                        cube.SetActive(true);
+
+                    }
+                    else
+                    {
+                        Debug.Log("입력한 이름이 리스트에 없습니다.");
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("선택된 아이템이 없거나, selectedItems 리스트가 null입니다.");
+                }
+            }
+        }
+
+        if (isClicked == false)
+        {
+            
+        }
+    }
+
     // 자신의 턴일 때의 처리.
     bool DoOwnTurn()
     {
@@ -268,42 +308,10 @@ public class Bingo : MonoBehaviour
         {
             //
             // 마우스의 왼쪽 버튼의 눌린 상태를 감시합니다.
-            bool isClicked = Input.GetKeyDown(KeyCode.Space);
-            if (isClicked == true)
-            {
-                if (_NameInputField != null)
-                {
-                    Debug.Log(_RandomBingo.selectedItems.Count);
-                    if (_RandomBingo.selectedItems != null && _RandomBingo.selectedItems.Count > 0)
-                    {
-                        string inputName = _NameInputField.text; // 사용자의 입력 이름 가져오기
+            Numcheck();
 
-                        List<string> selectedItems = _RandomBingo.selectedItems; // 선택된 아이템 리스트 가져오기
-
-                        if (selectedItems.Contains(inputName))
-                        {
-                            Debug.Log("입력한 이름이 리스트에 있습니다.");
-                        }
-                        else
-                        {
-                            Debug.Log("입력한 이름이 리스트에 없습니다.");
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogWarning("선택된 아이템이 없거나, selectedItems 리스트가 null입니다.");
-                    }
-                }
-            }
-
-            if (isClicked == false)
-            {
-                // 눌려지지 않았으므로 아무것도 하지 않지 않습니다.
-                return false;
-            }
-
-            Vector3 pos = Input.mousePosition;
-            Debug.Log("POS:" + pos.x + ", " + pos.y + ", " + pos.z);
+             Vector3 pos = Input.mousePosition;
+            //Debug.Log("POS:" + pos.x + ", " + pos.y + ", " + pos.z);
 
             // 수신한 정보를 바탕으로 선택된 칸으로 변환합니다.
             index = ConvertPositionToIndex(pos);
@@ -337,13 +345,14 @@ public class Bingo : MonoBehaviour
 
         // 상대의 정보를 수신합니다.
         int index = PlayerManager.Instance.returnStone();
+        
         if (index <= 0)
         {
             // 아직 수신되지 않았습니다.
             Debug.Log($"수신된 값 : {index}");
             return false;
         }
-
+        Numcheck();
         // 서버라면 ○ 클라이언트라면 ×를 지정합니다.
         Mark mark = (network.IsServer() == true) ? Mark.Cross : Mark.Circle;
         Debug.Log("수신수신수신");
