@@ -1036,7 +1036,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UI_MainMenu: {fileID: 999109139}
-  UI_Game: {fileID: 852444700}
+  UI_Game: {fileID: 1837901632}
   network: {fileID: 1015052536}
 --- !u!1 &712383859
 GameObject:
@@ -1341,6 +1341,7 @@ MonoBehaviour:
   crossTexture: {fileID: 2800000, guid: ef5e678566413f94db620f80550f64d1, type: 3}
   _NameInputField: {fileID: 852444702}
   _BingoExample: {fileID: 11400000, guid: 8037245955f662a40b0cc4d80f1f8379, type: 2}
+  _RandomBingo: {fileID: 1837901634}
 --- !u!4 &775959868
 Transform:
   m_ObjectHideFlags: 0
@@ -1374,7 +1375,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &852444701
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1392,7 +1393,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -6, y: -14}
+  m_AnchoredPosition: {x: -6, y: -376}
   m_SizeDelta: {x: 300, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &852444702
@@ -2850,6 +2851,8 @@ MonoBehaviour:
   - {fileID: 712383861}
   - {fileID: 1333684951}
   - {fileID: 919478687}
+  index: 0
+  selectedItems: []
 --- !u!1 &1906346001
 GameObject:
   m_ObjectHideFlags: 0

@@ -307,7 +307,6 @@ public class Bingo : MonoBehaviour
 
             // 수신한 정보를 바탕으로 선택된 칸으로 변환합니다.
             index = ConvertPositionToIndex(pos);
-            Debug.Log($"클릭 변환값 : {index}");
             if (index < 0)
             {
                 // 범위 밖이 선택되었습니다.
