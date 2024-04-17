@@ -108,6 +108,8 @@ public class Bingo : MonoBehaviour
     public BingoExSo _BingoExample;
     public RandomBingo _RandomBingo;
 
+    private string inputText;
+
 
     // Use this for initialization
     void Start()
@@ -143,6 +145,8 @@ public class Bingo : MonoBehaviour
                 UpdateGameOver();
                 break;
         }
+
+        inputText = _NameInputField.text;
     }
 
     // 게임 시작, 외부 UI에서 호출함.
@@ -258,18 +262,15 @@ public class Bingo : MonoBehaviour
         {
             if (_NameInputField != null)
             {
-                Debug.Log(_RandomBingo.selectedItems.Count);
                 if (_RandomBingo.selectedItems != null && _RandomBingo.selectedItems.Count > 0)
                 {
-                    string inputName = _NameInputField.text; // 사용자의 입력 이름 가져오기
-
+                                        
                     List<string> selectedItems = _RandomBingo.selectedItems; // 선택된 아이템 리스트 가져오기
 
-                    if (selectedItems.Contains(inputName))
+                    if (selectedItems.Contains(inputText))
                     {
                         Debug.Log("입력한 이름이 리스트에 있습니다.");
                         cube.SetActive(true);
-
                     }
                     else
                     {
@@ -294,6 +295,8 @@ public class Bingo : MonoBehaviour
     {
         int index = 0;
 
+        
+
         timer -= Time.deltaTime;
         if (timer <= 0.0f)
         {
@@ -308,9 +311,9 @@ public class Bingo : MonoBehaviour
         {
             //
             // 마우스의 왼쪽 버튼의 눌린 상태를 감시합니다.
-            Numcheck();
 
-             Vector3 pos = Input.mousePosition;
+            Numcheck();
+            Vector3 pos = Input.mousePosition;
             //Debug.Log("POS:" + pos.x + ", " + pos.y + ", " + pos.z);
 
             // 수신한 정보를 바탕으로 선택된 칸으로 변환합니다.
@@ -323,12 +326,12 @@ public class Bingo : MonoBehaviour
         }
 
         // 칸에 둡니다.
-        bool ret = SetMarkToSpace(index, localMark);
+        /*bool ret = SetMarkToSpace(index, localMark);
         if (ret == false)
         {
             // 둘 수 없습니다.
             return false;
-        }
+        }*/
 
         // 선택한 칸의 정보를 송신합니다
         C_MoveStone movePacket = new C_MoveStone();
@@ -341,6 +344,7 @@ public class Bingo : MonoBehaviour
     // 상대의 턴일 때의 처리.
     bool DoOppnentTurn()
     {
+        Numcheck();
         Debug.Log("DoOppnentTurn");
 
         // 상대의 정보를 수신합니다.
@@ -350,9 +354,10 @@ public class Bingo : MonoBehaviour
         {
             // 아직 수신되지 않았습니다.
             Debug.Log($"수신된 값 : {index}");
+            
             return false;
         }
-        Numcheck();
+        
         // 서버라면 ○ 클라이언트라면 ×를 지정합니다.
         Mark mark = (network.IsServer() == true) ? Mark.Cross : Mark.Circle;
         Debug.Log("수신수신수신");
@@ -361,13 +366,13 @@ public class Bingo : MonoBehaviour
         Debug.Log("Recv:" + index + " [" + network.IsServer() + "]");
 
         // 칸에 둡니다.
-        bool ret = SetMarkToSpace(index, remoteMark);
+        /*bool ret = SetMarkToSpace(index, remoteMark);
         if (ret == false)
         {
             // 둘 수 없다.
             Debug.Log("둘수없다.");
             return false;
-        }
+        }*/
 
         return true;
 
@@ -410,9 +415,9 @@ public class Bingo : MonoBehaviour
     }
 
     // 
-    bool SetMarkToSpace(int index, Mark mark)
+    /*bool SetMarkToSpace(int index, Mark mark)
     {
-        Debug.Log($"스페이스인덱스{spaces[index]}");
+        //Debug.Log($"스페이스인덱스{spaces[index]}");
         if (spaces[index] == -1)
         {
             // -1은 미선택된 칸임을 뜻함.
@@ -424,7 +429,7 @@ public class Bingo : MonoBehaviour
 
         // 이미 놓여 있습니다.
         return false;
-    }
+    }*/
 
 
     // 게임 리셋.

@@ -40,14 +40,14 @@ public class PlayerManager
             {
                 MyPlayer myPlayer = go.AddComponent<MyPlayer>();
                 myPlayer.PlayerId = p.playerId;
-                myPlayer.transform.position = new Vector3(-200, 5, 0);
+                myPlayer.transform.position = new Vector3(-8, 5, 0);
                 _myPlayer = myPlayer;
             }
             else
             {
                 Player player = go.AddComponent<Player>();
                 player.PlayerId = p.playerId;
-                player.transform.position = new Vector3(200, 5, 0);
+                player.transform.position = new Vector3(8, -5, 0);
                 _players.Add(p.playerId, player);
             }
         }
