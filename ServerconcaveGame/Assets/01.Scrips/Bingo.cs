@@ -7,6 +7,7 @@ using TMPro;
 using System.Linq;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using System.Reflection;
 
 public class Bingo : MonoBehaviour
 {
@@ -273,8 +274,22 @@ public class Bingo : MonoBehaviour
                     {
                         Debug.Log("입력한 이름이 리스트에 있습니다.");
                         cube.SetActive(true);
-                        // 서버에게 보내기
-                        return true;
+
+                        // 입력된 문자열을 정수로 변환하여 index 변수에 저장합니다.
+                        if (int.TryParse(inputText, out int index))
+                        {
+                            // 정수로 변환된 index 값을 이용하여 서버로 데이터를 전송합니다.
+                            List<int> values = new List<int>(); // 예시로 빈 리스트를 생성
+                            C_RandomIndex movePacket = new C_RandomIndex();
+                            movePacket.StoneInfo = (index, values); // index와 빈 리스트를 StoneInfo에 설정
+                            network.Send(movePacket.Write());
+
+                            return true;
+                        }
+                        else
+                        {
+                            Debug.LogError("입력한 값이 정수로 변환할 수 없습니다.");
+                        }
                     }
                     else
                     {
@@ -287,6 +302,8 @@ public class Bingo : MonoBehaviour
                 }
             }
         }
+        return false;
+
 
         if (isSpace == false)
         {
