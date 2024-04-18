@@ -25,7 +25,7 @@ namespace DummyClient
         ArraySegment<byte> Write();
     }
 
-    public class C_MoveStone : IPacket
+    /*public class C_MoveStone : IPacket
     {
         public int StonePosition;
         public ushort Protocol { get { return (ushort)PacketID.C_MoveStone; } }
@@ -49,6 +49,43 @@ namespace DummyClient
             count += sizeof(ushort);
             Array.Copy(BitConverter.GetBytes(this.StonePosition), 0, segment.Array, segment.Offset + count, sizeof(int));
             count += sizeof(int);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }*/
+
+    public class C_RandomIndex : IPacket
+    {
+        // index 값과 list 값 모두 전달하기 위해 튜플 사용
+        public (int index, List<int> values) StoneInfo;
+
+        public ushort Protocol { get { return (ushort)PacketID.C_MoveStone; } }
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            ushort count = 0;
+            count += sizeof(ushort);
+            count += sizeof(ushort);
+            int index = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+            count += sizeof(int);
+            // 리스트 값을 읽어오는 로직 추가해야 함
+            // 예: List<int> values = ???
+            // StoneInfo = (index, values);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_MoveStone), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(this.StoneInfo.index), 0, segment.Array, segment.Offset + count, sizeof(int));
+            count += sizeof(int);
+            // 리스트 값을 쓰는 로직 추가해야 함
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 

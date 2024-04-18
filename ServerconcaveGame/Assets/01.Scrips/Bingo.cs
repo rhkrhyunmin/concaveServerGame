@@ -109,6 +109,7 @@ public class Bingo : MonoBehaviour
     public RandomBingo _RandomBingo;
 
     private string inputText;
+    private bool isSpace = false;
 
 
     // Use this for initialization
@@ -146,6 +147,15 @@ public class Bingo : MonoBehaviour
                 break;
         }
 
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            isSpace = true;
+        }
+        else
+        {
+            isSpace = false;
+        }
+
         inputText = _NameInputField.text;
     }
 
@@ -178,6 +188,7 @@ public class Bingo : MonoBehaviour
 
     void UpdateReady()
     {
+        //list 랜덤 생성 여기서 만들고 서버로 패킷도 보내기
         // 시합 시작 신호 표시를 기다립니다.
         currentTime += Time.deltaTime;
         //Debug.Log("UpdateReady");
@@ -196,16 +207,10 @@ public class Bingo : MonoBehaviour
         if (turn == localMark)
         {
             setMark = DoOwnTurn();
-
-            //둘 수 없는 장소를 누르면 클릭용 사운드효과를 냅니다.
-            if (setMark == false && Input.GetMouseButtonDown(0))
-            {
-
-            }
         }
         else
         {
-            setMark = DoOppnentTurn();
+            setMark = DoOpponentTurn();
             //둘 수 없을 때 누르면 클릭용 사운드 효과를 냅니다.
             
         }
@@ -255,22 +260,21 @@ public class Bingo : MonoBehaviour
         }
     }
 
-    public void Numcheck()
+    public bool Numcheck()
     {
-        bool isClicked = Input.GetKeyDown(KeyCode.Space);
-        if (isClicked == true)
+        if (isSpace == true)
         {
             if (_NameInputField != null)
             {
                 if (_RandomBingo.selectedItems != null && _RandomBingo.selectedItems.Count > 0)
                 {
-                                        
-                    List<string> selectedItems = _RandomBingo.selectedItems; // 선택된 아이템 리스트 가져오기
-
+                    List<string> selectedItems = _RandomBingo.selectedItems;
                     if (selectedItems.Contains(inputText))
                     {
                         Debug.Log("입력한 이름이 리스트에 있습니다.");
                         cube.SetActive(true);
+                        // 서버에게 보내기
+                        return true;
                     }
                     else
                     {
@@ -284,23 +288,24 @@ public class Bingo : MonoBehaviour
             }
         }
 
-        if (isClicked == false)
+        if (isSpace == false)
         {
-            
+            Debug.LogWarning("안됨");
         }
+
+        return false;
     }
+
 
     // 자신의 턴일 때의 처리.
     bool DoOwnTurn()
     {
         int index = 0;
-
-        
+        List<int> values = new List<int>(); 
 
         timer -= Time.deltaTime;
         if (timer <= 0.0f)
         {
-            // 타임오버.
             timer = 0.0f;
             do
             {
@@ -309,75 +314,52 @@ public class Bingo : MonoBehaviour
         }
         else
         {
-            //
-            // 마우스의 왼쪽 버튼의 눌린 상태를 감시합니다.
+            if (isSpace == true)
+            {
+                Numcheck();
+            }
 
-            Numcheck();
             Vector3 pos = Input.mousePosition;
-            //Debug.Log("POS:" + pos.x + ", " + pos.y + ", " + pos.z);
 
-            // 수신한 정보를 바탕으로 선택된 칸으로 변환합니다.
             index = ConvertPositionToIndex(pos);
+            Debug.Log($"onturn {index}");
             if (index < 0)
             {
-                // 범위 밖이 선택되었습니다.
                 return false;
             }
         }
 
-        // 칸에 둡니다.
-        /*bool ret = SetMarkToSpace(index, localMark);
-        if (ret == false)
-        {
-            // 둘 수 없습니다.
-            return false;
-        }*/
-
-        // 선택한 칸의 정보를 송신합니다
-        C_MoveStone movePacket = new C_MoveStone();
-        movePacket.StonePosition = index;
+        C_RandomIndex movePacket = new C_RandomIndex();
+        movePacket.StoneInfo = (index, values); // index와 빈 리스트를 StoneInfo에 설정
         network.Send(movePacket.Write());
 
         return true;
     }
 
     // 상대의 턴일 때의 처리.
-    bool DoOppnentTurn()
+    bool DoOpponentTurn()
     {
         Numcheck();
-        Debug.Log("DoOppnentTurn");
 
-        // 상대의 정보를 수신합니다.
         int index = PlayerManager.Instance.returnStone();
-        
+
         if (index <= 0)
         {
-            // 아직 수신되지 않았습니다.
             Debug.Log($"수신된 값 : {index}");
-            
             return false;
         }
-        
-        // 서버라면 ○ 클라이언트라면 ×를 지정합니다.
-        Mark mark = (network.IsServer() == true) ? Mark.Cross : Mark.Circle;
-        Debug.Log("수신수신수신");
 
-        // 수신한 정보를 선택된 칸으로 변환합니다. 
-        Debug.Log("Recv:" + index + " [" + network.IsServer() + "]");
-
-        // 칸에 둡니다.
-        /*bool ret = SetMarkToSpace(index, remoteMark);
-        if (ret == false)
+        if (isSpace == true)
         {
-            // 둘 수 없다.
-            Debug.Log("둘수없다.");
-            return false;
-        }*/
+            Numcheck();
+            return true;
+        }
+
+        Mark mark = (network.IsServer() == true) ? Mark.Cross : Mark.Circle;
 
         return true;
-
-
     }
+
 
     // 
     int ConvertPositionToIndex(Vector3 pos)
