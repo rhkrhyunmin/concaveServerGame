@@ -246,6 +246,8 @@ public class Bingo : MonoBehaviour
 
         turn = (turn == Mark.Circle) ? Mark.Cross : Mark.Circle;
         Debug.Log($"턴 갱신 :{turn}");
+
+
         timer = turnTime;
     }
 
@@ -281,7 +283,8 @@ public class Bingo : MonoBehaviour
                             // 정수로 변환된 index 값을 이용하여 서버로 데이터를 전송합니다.
                             List<int> values = new List<int>(); // 예시로 빈 리스트를 생성
                             C_RandomIndex movePacket = new C_RandomIndex();
-                            movePacket.StoneInfo = (index, values); // index와 빈 리스트를 StoneInfo에 설정
+                            movePacket.StoneInfo = (index, values);
+                            Debug.Log(movePacket.StoneInfo);// index와 빈 리스트를 StoneInfo에 설정
                             network.Send(movePacket.Write());
 
                             return true;
@@ -302,7 +305,6 @@ public class Bingo : MonoBehaviour
                 }
             }
         }
-        return false;
 
 
         if (isSpace == false)
@@ -317,38 +319,19 @@ public class Bingo : MonoBehaviour
     // 자신의 턴일 때의 처리.
     bool DoOwnTurn()
     {
-        int index = 0;
-        List<int> values = new List<int>(); 
+        _NameInputField.interactable = true;
 
-        timer -= Time.deltaTime;
-        if (timer <= 0.0f)
-        {
-            timer = 0.0f;
-            do
-            {
-                index = UnityEngine.Random.Range(0, 8);
-            } while (spaces[index] != -1);
-        }
-        else
-        {
-            if (isSpace == true)
-            {
-                Numcheck();
-            }
+        Numcheck();
 
-            Vector3 pos = Input.mousePosition;
+        // _NameInputField에서 사용자가 입력한 값을 int로 변환하여 index에 할당
+        /*int index = int.Parse(_NameInputField.text);
 
-            index = ConvertPositionToIndex(pos);
-            Debug.Log($"onturn {index}");
-            if (index < 0)
-            {
-                return false;
-            }
-        }
+        List<int> values = new List<int>();
 
+        // 선택된 인덱스로 데이터 패킷을 생성하여 서버로 전송합니다.
         C_RandomIndex movePacket = new C_RandomIndex();
-        movePacket.StoneInfo = (index, values); // index와 빈 리스트를 StoneInfo에 설정
-        network.Send(movePacket.Write());
+        movePacket.StoneInfo = (index, values);
+        network.Send(movePacket.Write());*/
 
         return true;
     }
@@ -356,15 +339,17 @@ public class Bingo : MonoBehaviour
     // 상대의 턴일 때의 처리.
     bool DoOpponentTurn()
     {
+        _NameInputField.interactable = false;
         Numcheck();
 
-        int index = PlayerManager.Instance.returnStone();
+        //여기가 뭔가 이상한 거 같음 maybe?
+        //int index = PlayerManager.Instance.returnStone();
 
-        if (index <= 0)
+        /*if (index <= 0)
         {
             Debug.Log($"수신된 값 : {index}");
             return false;
-        }
+        }*/
 
         if (isSpace == true)
         {

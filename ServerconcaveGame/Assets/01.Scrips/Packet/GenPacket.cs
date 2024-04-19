@@ -14,7 +14,8 @@ namespace DummyClient
         S_BroadcastLeaveGame = 3,
         S_PlayerList = 4,
 
-        C_MoveStone = 5,
+        C_RandomIndex = 5,
+        //C_MoveStone = 5,
         S_BroadCastStone = 6,
     }
 
@@ -61,7 +62,7 @@ namespace DummyClient
         // index 값과 list 값 모두 전달하기 위해 튜플 사용
         public (int index, List<int> values) StoneInfo;
 
-        public ushort Protocol { get { return (ushort)PacketID.C_MoveStone; } }
+        public ushort Protocol { get { return (ushort)PacketID.C_RandomIndex; } }
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -81,7 +82,7 @@ namespace DummyClient
             ushort count = 0;
 
             count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_MoveStone), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_RandomIndex), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
             Array.Copy(BitConverter.GetBytes(this.StoneInfo.index), 0, segment.Array, segment.Offset + count, sizeof(int));
             count += sizeof(int);
