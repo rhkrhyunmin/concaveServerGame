@@ -42,6 +42,8 @@ namespace DummyClient
             S_BroadCastStone pkt = packet as S_BroadCastStone;
             ServerSession serverSession = session as ServerSession;
 
+            Debug.Log(123);
+
             PlayerManager.Instance.BroadCastStone(pkt);
         }
 

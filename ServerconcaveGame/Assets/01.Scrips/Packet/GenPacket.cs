@@ -15,7 +15,6 @@ namespace DummyClient
         S_PlayerList = 4,
 
         C_RandomIndex = 5,
-        //C_MoveStone = 5,
         S_BroadCastStone = 6,
     }
 
@@ -26,41 +25,9 @@ namespace DummyClient
         ArraySegment<byte> Write();
     }
 
-    /*public class C_MoveStone : IPacket
-    {
-        public int StonePosition;
-        public ushort Protocol { get { return (ushort)PacketID.C_MoveStone; } }
-
-        public void Read(ArraySegment<byte> segment)
-        {
-            ushort count = 0;
-            count += sizeof(ushort);
-            count += sizeof(ushort);
-            this.StonePosition = BitConverter.ToInt32(segment.Array, segment.Offset + count);
-            count += sizeof(int);
-        }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_MoveStone), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes(this.StonePosition), 0, segment.Array, segment.Offset + count, sizeof(int));
-            count += sizeof(int);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
-    }*/
-
     public class C_RandomIndex : IPacket
     {
-        // index 값과 list 값 모두 전달하기 위해 튜플 사용
-        public (int index, List<int> values) StoneInfo;
+        public int index;
 
         public ushort Protocol { get { return (ushort)PacketID.C_RandomIndex; } }
 
@@ -69,11 +36,8 @@ namespace DummyClient
             ushort count = 0;
             count += sizeof(ushort);
             count += sizeof(ushort);
-            int index = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+            this.index = BitConverter.ToInt32(segment.Array, segment.Offset + count);
             count += sizeof(int);
-            // 리스트 값을 읽어오는 로직 추가해야 함
-            // 예: List<int> values = ???
-            // StoneInfo = (index, values);
         }
 
         public ArraySegment<byte> Write()
@@ -84,9 +48,8 @@ namespace DummyClient
             count += sizeof(ushort);
             Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_RandomIndex), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes(this.StoneInfo.index), 0, segment.Array, segment.Offset + count, sizeof(int));
+            Array.Copy(BitConverter.GetBytes(this.index), 0, segment.Array, segment.Offset + count, sizeof(int));
             count += sizeof(int);
-            // 리스트 값을 쓰는 로직 추가해야 함
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 
@@ -164,10 +127,7 @@ namespace DummyClient
 
         public void Read(ArraySegment<byte> segment)
         {
-            ushort count = 0;
-            count += sizeof(ushort);
-            count += sizeof(ushort);
-
+            // LeaveGame 패킷은 별도의 데이터를 읽을 필요가 없습니다.
         }
 
         public ArraySegment<byte> Write()
@@ -178,7 +138,6 @@ namespace DummyClient
             count += sizeof(ushort);
             Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_LeaveGame), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
-
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 
@@ -235,13 +194,11 @@ namespace DummyClient
 
             public bool Write(ArraySegment<byte> segment, ref ushort count)
             {
-                bool success = true;
                 Array.Copy(BitConverter.GetBytes(this.isSelf), 0, segment.Array, segment.Offset + count, sizeof(bool));
                 count += sizeof(bool);
                 Array.Copy(BitConverter.GetBytes(this.playerId), 0, segment.Array, segment.Offset + count, sizeof(int));
                 count += sizeof(int);
-
-                return success;
+                return true;
             }
         }
         public List<Player> players = new List<Player>();

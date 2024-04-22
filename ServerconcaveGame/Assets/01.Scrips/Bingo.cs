@@ -1,13 +1,7 @@
-using UnityEngine;
-using UnityEngine.UI;
-using System;
-using System.Collections;
 using DummyClient;
-using TMPro;
-using System.Linq;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using System.Reflection;
+using TMPro;
+using UnityEngine;
 
 public class Bingo : MonoBehaviour
 {
@@ -150,6 +144,7 @@ public class Bingo : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
+            turn = (turn == Mark.Circle) ? Mark.Cross : Mark.Circle;
             isSpace = true;
         }
         else
@@ -189,8 +184,6 @@ public class Bingo : MonoBehaviour
 
     void UpdateReady()
     {
-        //list 랜덤 생성 여기서 만들고 서버로 패킷도 보내기
-        // 시합 시작 신호 표시를 기다립니다.
         currentTime += Time.deltaTime;
         //Debug.Log("UpdateReady");
 
@@ -244,7 +237,6 @@ public class Bingo : MonoBehaviour
 
         // 턴을 갱신합니다.
 
-        turn = (turn == Mark.Circle) ? Mark.Cross : Mark.Circle;
         Debug.Log($"턴 갱신 :{turn}");
 
 
@@ -280,11 +272,9 @@ public class Bingo : MonoBehaviour
                         // 입력된 문자열을 정수로 변환하여 index 변수에 저장합니다.
                         if (int.TryParse(inputText, out int index))
                         {
-                            // 정수로 변환된 index 값을 이용하여 서버로 데이터를 전송합니다.
-                            List<int> values = new List<int>(); // 예시로 빈 리스트를 생성
                             C_RandomIndex movePacket = new C_RandomIndex();
-                            movePacket.StoneInfo = (index, values);
-                            Debug.Log(movePacket.StoneInfo);// index와 빈 리스트를 StoneInfo에 설정
+                            movePacket.index = (index);
+                            Debug.Log(movePacket.index);// index와 빈 리스트를 StoneInfo에 설정
                             network.Send(movePacket.Write());
 
                             return true;
@@ -340,7 +330,7 @@ public class Bingo : MonoBehaviour
     bool DoOpponentTurn()
     {
         _NameInputField.interactable = false;
-        Numcheck();
+        /*Numcheck();*/
 
         //여기가 뭔가 이상한 거 같음 maybe?
         //int index = PlayerManager.Instance.returnStone();
@@ -354,10 +344,11 @@ public class Bingo : MonoBehaviour
         if (isSpace == true)
         {
             Numcheck();
+            
             return true;
         }
 
-        Mark mark = (network.IsServer() == true) ? Mark.Cross : Mark.Circle;
+        //Mark mark = (network.IsServer() == true) ? Mark.Cross : Mark.Circle;
 
         return true;
     }

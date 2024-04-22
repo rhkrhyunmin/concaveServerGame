@@ -22,12 +22,14 @@ namespace DummyClient.Session
         }
         public override void OnRecvPacket(ArraySegment<byte> buffer)  // 리시브 이벤트 발생시 동작
         {
+
+            UnityEngine.Debug.Log($"Transferred bytes: qwerqwerqwer");
             PacketManager.Instance.OnRecvPacket(this, buffer, (s, p) => PacketQueue.Instance.Push(p));  // 패킷매니저 시작(해석기 가동)
             // (s, p) PacketSession, IPacket
         }
         public override void OnSend(int numOfBytes)             // 샌드 이벤트 발생시 동작
         {
-            //Console.WriteLine($"Transferred bytes: {numOfBytes}");
+            UnityEngine.Debug.Log($"Transferred bytes: {numOfBytes}");
         }
     }
 }
