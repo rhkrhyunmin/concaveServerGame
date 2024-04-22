@@ -17,7 +17,7 @@ public class BingoCheck : MonoBehaviour
 
     public void CheckLine(C_RandomIndex randIdx, bool value)
     {
-        _bingoindex[randIdx.StoneInfo.index] = value;
+        _bingoindex[randIdx.index] = value;
 
         CheckIdx();
     }
