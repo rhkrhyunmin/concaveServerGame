@@ -36,7 +36,7 @@ namespace DummyClient
             _makeFunc.Add((ushort)PacketID.S_PlayerList, MakePacket<S_PlayerList>);
             _handler.Add((ushort)PacketID.S_PlayerList, PacketHandler.S_PlayerListHandler);
 
-            _makeFunc.Add((ushort)PacketID.S_BroadCastStone, MakePacket<S_BroadCastStone>);
+            _makeFunc.Add((ushort)PacketID.S_BroadCastStone, MakePacket<S_Bingo>);
             _handler.Add((ushort)PacketID.S_BroadCastStone, PacketHandler.S_BroadCastStoneHandler);
 
         }
@@ -67,6 +67,7 @@ namespace DummyClient
         {
             T packet = new T();     // 패킷 만들기
             packet.Read(buffer);    // 들어온 패킷 읽기
+            Console.WriteLine(buffer);
             return packet;
         }
         // 패킷 처리부분 분리

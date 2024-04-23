@@ -1,5 +1,7 @@
 using DummyClient;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -184,6 +186,26 @@ public class Bingo : MonoBehaviour
 
     void UpdateReady()
     {
+        List<string> bingoPanel = _RandomBingo.selectedItems.OrderBy(x => UnityEngine.Random.value).Take(9).ToList();
+
+        C_RandomIndex movePacketArray = new C_RandomIndex(); // 새로운 패킷 형식 정의
+
+        Debug.Log("1");
+        foreach (string item in bingoPanel)
+        {
+            int parsedValue;
+            if (int.TryParse(item, out parsedValue))
+            {
+                movePacketArray.values.Add(parsedValue); // 값 리스트에 추가
+            }
+            else
+            {
+            }
+        }
+
+        network.Send(movePacketArray.Write()); // 패킷을 한 번에 서버로 전송
+        progress = GameProgress.Turn;
+
         currentTime += Time.deltaTime;
         //Debug.Log("UpdateReady");
 
@@ -273,8 +295,8 @@ public class Bingo : MonoBehaviour
                         if (int.TryParse(inputText, out int index))
                         {
                             C_RandomIndex movePacket = new C_RandomIndex();
-                            movePacket.index = (index);
-                            Debug.Log(movePacket.index);// index와 빈 리스트를 StoneInfo에 설정
+                            movePacket.listCount = (index);
+                            //Debug.Log(movePacket.index);// index와 빈 리스트를 StoneInfo에 설정
                             network.Send(movePacket.Write());
 
                             return true;

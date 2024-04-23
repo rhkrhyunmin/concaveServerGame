@@ -53,7 +53,6 @@ public class RandomBingo : MonoBehaviour
             } while (selectedIndices.Contains(randomIndex)); // 이미 선택된 요소인 경우 다시 선택
 
             selectedItems.Add(list[randomIndex]);
-            Debug.Log(list[randomIndex]);
             selectedIndices.Add(randomIndex);
         }
 

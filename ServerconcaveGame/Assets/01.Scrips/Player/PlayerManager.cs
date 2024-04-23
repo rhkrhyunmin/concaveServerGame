@@ -15,9 +15,9 @@ public class PlayerManager
 
 
     // �� ���� ����
-    public void BroadCastStone(S_BroadCastStone packet)
+    public void BroadCastStone(S_Bingo packet)
     {
-        StonePosition = packet.StonePosition;
+        StonePosition = packet.s_bingo;
         Debug.Log($"���������� ���� : {StonePosition}");
     }
 
