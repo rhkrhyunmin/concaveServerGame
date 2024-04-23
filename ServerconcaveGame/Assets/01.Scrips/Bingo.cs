@@ -190,7 +190,6 @@ public class Bingo : MonoBehaviour
 
         C_RandomIndex movePacketArray = new C_RandomIndex(); // 새로운 패킷 형식 정의
 
-        Debug.Log("1");
         foreach (string item in bingoPanel)
         {
             int parsedValue;
@@ -322,7 +321,7 @@ public class Bingo : MonoBehaviour
 
         if (isSpace == false)
         {
-            Debug.LogWarning("안됨");
+            
         }
 
         return false;

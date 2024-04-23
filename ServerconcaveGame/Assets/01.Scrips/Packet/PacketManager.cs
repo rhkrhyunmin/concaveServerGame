@@ -67,7 +67,7 @@ namespace DummyClient
         {
             T packet = new T();     // 패킷 만들기
             packet.Read(buffer);    // 들어온 패킷 읽기
-            Console.WriteLine(buffer);
+           
             return packet;
         }
         // 패킷 처리부분 분리
