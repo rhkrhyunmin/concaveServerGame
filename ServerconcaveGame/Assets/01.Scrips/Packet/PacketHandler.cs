@@ -39,7 +39,7 @@ namespace DummyClient
 
         public static void S_BroadCastStoneHandler(PacketSession session, IPacket packet)
         {
-            S_Bingo pkt = packet as S_Bingo;
+            S_BroadcastEnterGame pkt = packet as S_BroadcastEnterGame;
             ServerSession serverSession = session as ServerSession;
 
             Debug.Log(123);

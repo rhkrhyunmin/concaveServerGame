@@ -196,10 +196,11 @@ public class Bingo : MonoBehaviour
             int parsedValue;
             if (int.TryParse(item, out parsedValue))
             {
-                movePacketArray.values.Add(parsedValue); // 값 리스트에 추가
+                movePacketArray.index = parsedValue; // 값 리스트에 추가
             }
             else
             {
+                // 실패한 경우에 대한 처리
             }
         }
 
@@ -295,7 +296,7 @@ public class Bingo : MonoBehaviour
                         if (int.TryParse(inputText, out int index))
                         {
                             C_RandomIndex movePacket = new C_RandomIndex();
-                            movePacket.listCount = (index);
+                            movePacket.index = (index);
                             //Debug.Log(movePacket.index);// index와 빈 리스트를 StoneInfo에 설정
                             network.Send(movePacket.Write());
 
