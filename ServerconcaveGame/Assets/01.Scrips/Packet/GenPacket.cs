@@ -1,6 +1,7 @@
 using ServerCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,7 @@ namespace DummyClient
     public class C_RandomIndex : IPacket
     {
         public int index;
+        public List<int> values { get; } = new List<int>();
 
         public ushort Protocol { get { return (ushort)PacketID.C_RandomIndex; } }
 
@@ -52,6 +54,15 @@ namespace DummyClient
             count += sizeof(int);
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            for (int i = 0; i < index; i++)
+            {
+                int value = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+                count += sizeof(int);
+                this.values.Add(value);
+
+                
+            }
 
             return SendBufferHelper.Close(count);
         }

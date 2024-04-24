@@ -195,7 +195,8 @@ public class Bingo : MonoBehaviour
             int parsedValue;
             if (int.TryParse(item, out parsedValue))
             {
-                movePacketArray.index = parsedValue; // 값 리스트에 추가
+                movePacketArray.index = parsedValue;
+                
             }
             else
             {
