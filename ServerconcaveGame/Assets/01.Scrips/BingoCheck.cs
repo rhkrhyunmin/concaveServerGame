@@ -26,15 +26,16 @@ public class BingoCheck : MonoBehaviour
         foreach (int index in randIdx.values)
         {
             _bingoindex[index] = value; // �־��� value ���� �Ҵ��մϴ�.
+            ShowCircle(index);
         }
 
-        ShowCircle(randIdx.index);
+        
         CheckBingo();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             _bingoindex[_idx] = true;
             ShowCircle(_idx);
