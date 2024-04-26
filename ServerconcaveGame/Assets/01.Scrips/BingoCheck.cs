@@ -1,4 +1,5 @@
 using DummyClient;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,10 +18,17 @@ public class BingoCheck : MonoBehaviour
 
     public void CheckLine(C_RandomIndex randIdx, bool value)
     {
-        _bingoindex[randIdx.index] = value;
+        // randIdx 객체의 values 리스트에 있는 각 값들을 인덱스로 사용하여 _bingoindex 배열에 값을 할당합니다.
+        foreach (int index in randIdx.values)
+        {
+            _bingoindex[index] = value; // 주어진 value 값을 할당합니다.
+        }
 
+        // 인덱스에 값을 할당한 후에 다른 작업을 수행하거나 상태를 체크하기 위한 CheckIdx 메서드를 호출합니다.
         CheckIdx();
     }
+
+
 
     private void CheckIdx()
     {

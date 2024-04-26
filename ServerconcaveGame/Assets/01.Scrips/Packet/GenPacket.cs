@@ -28,44 +28,69 @@ namespace DummyClient
 
     public class C_RandomIndex : IPacket
     {
-        public int index;
         public List<int> values { get; } = new List<int>();
 
         public ushort Protocol { get { return (ushort)PacketID.C_RandomIndex; } }
 
         public void Read(ArraySegment<byte> segment)
         {
-            ushort count = 0;
+            int count = 0;
+
+            // 패킷 ID를 건너뜁니다.
             count += sizeof(ushort);
+
+            // 값들의 개수를 읽어들입니다.
+            /* int valueCount = BitConverter.ToInt32(segment.Array, segment.Offset + count);*/
             count += sizeof(ushort);
-            this.index = BitConverter.ToInt32(segment.Array, segment.Offset + count);
-            count += sizeof(int);
+            // Console.WriteLine(valueCount);
+
+
+            // 각 값을 읽어들입니다.
+            for (int i = 0; i < 9; i++)
+            {
+                /*// 값의 길이를 읽어들입니다.
+                int valueLength = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+                ;*/
+
+                // 값 자체를 읽어들여 문자열로 변환합니다.
+                int value = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+                this.values.Add(value);
+                Console.WriteLine(value);
+                count += sizeof(int);
+
+                // 다음 값의 위치로 이동합니다.
+                //count += valueLength;
+
+            }
         }
+
 
         public ArraySegment<byte> Write()
         {
             ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
+            int count = 0; // ushort -> int로 변경
 
             count += sizeof(ushort);
+
+            // 패킷 ID를 전송합니다.
             Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_RandomIndex), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes(this.index), 0, segment.Array, segment.Offset + count, sizeof(int));
-            count += sizeof(int);
 
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            for (int i = 0; i < index; i++)
+            // 각 값을 전송합니다.
+            foreach (int value in this.values)
             {
-                int value = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+                // 값 자체를 전송합니다.
+                Array.Copy(BitConverter.GetBytes(value), 0, segment.Array, segment.Offset + count, sizeof(int));
                 count += sizeof(int);
-                this.values.Add(value);
-
-                
             }
+
+            // 전체 패킷의 길이를 전송합니다.
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 
             return SendBufferHelper.Close(count);
         }
+
+
     }
 
     public class C_Bingo : IPacket

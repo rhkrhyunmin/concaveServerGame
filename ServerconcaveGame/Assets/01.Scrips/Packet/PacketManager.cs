@@ -27,7 +27,7 @@ namespace DummyClient
 
         public void Register()
         {   // 멀티스레드 개입 차단 필요
-            _makeFunc.Add((ushort)PacketID.S_BroadcastEnterGame, MakePacket<S_Bingo>);
+            _makeFunc.Add((ushort)PacketID.S_BroadcastEnterGame, MakePacket<S_BroadcastEnterGame>);
             _handler.Add((ushort)PacketID.S_BroadcastEnterGame, PacketHandler.S_BroadcastEnterGameHandler);
             
             _makeFunc.Add((ushort)PacketID.S_BroadcastLeaveGame, MakePacket<S_BroadcastLeaveGame>);
@@ -36,8 +36,8 @@ namespace DummyClient
             _makeFunc.Add((ushort)PacketID.S_PlayerList, MakePacket<S_PlayerList>);
             _handler.Add((ushort)PacketID.S_PlayerList, PacketHandler.S_PlayerListHandler);
 
-            _makeFunc.Add((ushort)PacketID.S_BroadCastStone, MakePacket<S_Bingo>);
-            _handler.Add((ushort)PacketID.S_BroadCastStone, PacketHandler.S_BroadCastStoneHandler);
+           /* _makeFunc.Add((ushort)PacketID.S_BroadCastStone, MakePacket<S_Bingo>);
+            _handler.Add((ushort)PacketID.S_BroadCastStone, PacketHandler.S_BroadCastStoneHandler);*/
 
         }
 

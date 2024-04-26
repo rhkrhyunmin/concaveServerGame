@@ -195,7 +195,8 @@ public class Bingo : MonoBehaviour
             int parsedValue;
             if (int.TryParse(item, out parsedValue))
             {
-                movePacketArray.index = parsedValue;
+                movePacketArray.values.Add(parsedValue);
+                Debug.Log(parsedValue);
                 
             }
             else
@@ -204,7 +205,7 @@ public class Bingo : MonoBehaviour
             }
         }
 
-        network.Send(movePacketArray.Write()); // 패킷을 한 번에 서버로 전송
+        network.Send(movePacketArray.Write());
         progress = GameProgress.Turn;
 
         currentTime += Time.deltaTime;
@@ -296,7 +297,7 @@ public class Bingo : MonoBehaviour
                         if (int.TryParse(inputText, out int index))
                         {
                             C_RandomIndex movePacket = new C_RandomIndex();
-                            movePacket.index = (index);
+                            movePacket.values.Add(index);
                             //Debug.Log(movePacket.index);// index와 빈 리스트를 StoneInfo에 설정
                             network.Send(movePacket.Write());
 
