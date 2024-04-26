@@ -3,12 +3,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BingoCheck : MonoBehaviour
 {
-    private const int block = 3;
+    private const int Block = 3;
+    private int _idx = 0;
+    private bool[] _bingoindex = new bool[Block * Block];
 
-    private bool[] _bingoindex = new bool[block * block];
+    [SerializeField] private Image[] _image;
+    [SerializeField] private Sprite _circle;
 
     private void Start()
     {
@@ -18,14 +22,31 @@ public class BingoCheck : MonoBehaviour
 
     public void CheckLine(C_RandomIndex randIdx, bool value)
     {
-        // randIdx °´Ã¼ÀÇ values ¸®½ºÆ®¿¡ ÀÖ´Â °¢ °ªµéÀ» ÀÎµ¦½º·Î »ç¿ëÇÏ¿© _bingoindex ¹è¿­¿¡ °ªÀ» ÇÒ´çÇÕ´Ï´Ù.
+        // randIdx ï¿½ï¿½Ã¼ï¿½ï¿½ values ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ _bingoindex ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ï¿½Õ´Ï´ï¿½.
         foreach (int index in randIdx.values)
         {
-            _bingoindex[index] = value; // ÁÖ¾îÁø value °ªÀ» ÇÒ´çÇÕ´Ï´Ù.
+            _bingoindex[index] = value; // ï¿½Ö¾ï¿½ï¿½ï¿½ value ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ï¿½Õ´Ï´ï¿½.
         }
 
-        // ÀÎµ¦½º¿¡ °ªÀ» ÇÒ´çÇÑ ÈÄ¿¡ ´Ù¸¥ ÀÛ¾÷À» ¼öÇàÇÏ°Å³ª »óÅÂ¸¦ Ã¼Å©ÇÏ±â À§ÇÑ CheckIdx ¸Þ¼­µå¸¦ È£ÃâÇÕ´Ï´Ù.
-        CheckIdx();
+        ShowCircle(randIdx.index);
+        CheckBingo();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _bingoindex[_idx] = true;
+            ShowCircle(_idx);
+            print(CheckBingo());
+            _idx++;
+        }
+    }
+
+    private void ShowCircle(int idx)
+    {
+        _image[idx].enabled = true;
+        _image[idx].sprite = _circle;
     }
 
 
@@ -41,23 +62,51 @@ public class BingoCheck : MonoBehaviour
 
             if (i % 4 == 0) idx[2]++;
 
-            if (i / block == 0) { a++; if (a >= 3) idx[1] = a; }
-            else if (i / block == 1) { b++; if (b >= 3) idx[1] = b; }
-            else { c++; if (c >= 3) idx[1] = c; }
+            if (0 < i && i <= 6 && i % 2 == 0)
+                idx[1]++;
 
-            if (i % block == 0) idx[0]++;
+            //if (i / block == 0) { a++; if (a >= block) idx[1] = a; }
+            //else if (i / block == 1) { b++; if (b >= block) idx[1] = b; }
+            //else { c++; if (c >= block) idx[1] = c; }
 
-            for (int crossUp = 1; crossUp <= 3; crossUp++)
-                if (i / 2 == crossUp) idx[3]++;
+            if (i % Block == 0) idx[0]++;
+
+            for (int crossUp = 0; crossUp < Block; crossUp++)
+                if (i / 3 == crossUp) idx[3]++;
         }
 
-        foreach(int i in idx)
+        foreach (int i in idx)
         {
-            if (i > 3)
+            if (i >= Block)
             {
-                //‰çÀ» ¶§
-                //Å×½ºÆ® ¾ÈÇß´Âµ¥ µÇ´Â°É·Î ÇØ¶ó °Á
+                Debug.Log(i);
+                //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+                //ï¿½×½ï¿½Æ® ï¿½ï¿½ï¿½ß´Âµï¿½ ï¿½Ç´Â°É·ï¿½ ï¿½Ø¶ï¿½ ï¿½ï¿½
             }
         }
+    }
+
+    private bool CheckBingo()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
+            if (_bingoindex[i * 3] && _bingoindex[i * 3 + 1] && _bingoindex[i * 3 + 2])
+                return true;
+
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
+            if (_bingoindex[i] && _bingoindex[i + 3] && _bingoindex[i + 6])
+                return true;
+        }
+
+        // ï¿½ë°¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼Å©(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½)
+        if ((_bingoindex[0] && _bingoindex[4] && _bingoindex[8]))
+            return true;
+
+        // ï¿½ë°¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼Å©(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½)
+        if ((_bingoindex[2] && _bingoindex[4] && _bingoindex[6]))
+            return true;
+
+        return false;
     }
 }
