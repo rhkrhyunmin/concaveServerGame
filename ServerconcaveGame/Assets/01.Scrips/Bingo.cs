@@ -296,9 +296,14 @@ public class Bingo : MonoBehaviour
                         // 입력된 문자열을 정수로 변환하여 index 변수에 저장합니다.
                         if (int.TryParse(inputText, out int index))
                         {
-                            C_RandomIndex movePacket = new C_RandomIndex();
-                            movePacket.values.Add(index);
-                            //Debug.Log(movePacket.index);// index와 빈 리스트를 StoneInfo에 설정
+                            C_Bingo movePacket = new C_Bingo();
+                            int bingoValue;
+                            if (int.TryParse(inputText, out bingoValue))
+                            {
+                                movePacket.StonePosition = bingoValue;
+                                Debug.Log("3");
+                            }
+                            
                             network.Send(movePacket.Write());
 
                             return true;
