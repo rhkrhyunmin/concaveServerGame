@@ -36,8 +36,11 @@ namespace DummyClient
             _makeFunc.Add((ushort)PacketID.S_PlayerList, MakePacket<S_PlayerList>);
             _handler.Add((ushort)PacketID.S_PlayerList, PacketHandler.S_PlayerListHandler);
 
-           /* _makeFunc.Add((ushort)PacketID.S_BroadCastStone, MakePacket<S_Bingo>);
-            _handler.Add((ushort)PacketID.S_BroadCastStone, PacketHandler.S_BroadCastStoneHandler);*/
+           /* _makeFunc.Add((ushort)PacketID.c_Bingo, MakePacket<C_Bingo>);
+            _handler.Add((ushort)PacketID.c_Bingo, PacketHandler.C_MoveStoneHandler);*/
+
+            /* _makeFunc.Add((ushort)PacketID.S_BroadCastStone, MakePacket<S_Bingo>);
+             _handler.Add((ushort)PacketID.S_BroadCastStone, PacketHandler.S_BroadCastStoneHandler);*/
 
         }
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
+using System.Diagnostics;
 
 namespace ServerCore
 {
@@ -137,6 +138,7 @@ namespace ServerCore
                 _sendQueue.Enqueue(sendBuff);
                 if (_pendinglist.Count == 0)    // 대기중인 것이 없을때
                     RegisterSend();
+                
             }
 
         }

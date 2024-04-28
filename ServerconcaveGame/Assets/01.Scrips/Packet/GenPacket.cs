@@ -17,6 +17,7 @@ namespace DummyClient
 
         C_RandomIndex = 5,
         S_BroadCastStone = 6,
+        c_Bingo = 7,
     }
 
     public interface IPacket

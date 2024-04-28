@@ -301,10 +301,10 @@ public class Bingo : MonoBehaviour
                             if (int.TryParse(inputText, out bingoValue))
                             {
                                 movePacket.StonePosition = bingoValue;
-                                Debug.Log("3");
+                                network.Send(movePacket.Write());
                             }
                             
-                            network.Send(movePacket.Write());
+                            
 
                             return true;
                         }

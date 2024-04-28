@@ -40,6 +40,7 @@ public class NetworkManager : MonoBehaviour
     public void Send(ArraySegment<byte> sendBuff)
     {
         _session.Send(sendBuff);
+        Debug.Log("보냄");
     }
 
     public bool ConnectToServer(IPAddress ipAddr, int port)
