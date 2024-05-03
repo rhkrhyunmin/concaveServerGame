@@ -11,6 +11,7 @@ public class RandomBingo : MonoBehaviour
     public int index = 0;
     public List<string> selectedItems;
 
+    public static RandomBingo Instance { get; } = new RandomBingo();
 
     void Start()
     {

@@ -2,12 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using static DummyClient.S_PlayerList;
 
 public class PlayerManager
 {
+    public TextMeshProUGUI DebugTMP;
+
     Player _myPlayer;
+    Bingo _bingo;
     int StonePosition;
+
+
     // ���ӵ��ִ� �÷��̾���� ���
     Dictionary<int, Player> _players = new Dictionary<int, Player>();
 
@@ -64,6 +70,15 @@ public class PlayerManager
 
         Player player = go.AddComponent<Player>();
         _players.Add(packet.playerId, player);
+    }
+
+    public void GiveBingoValue(C_Bingo c_Bingo)
+    {
+       /*if (c_Bingo.c_bingo == _bingo.)
+        {
+            
+            Debug.Log(c_Bingo.c_bingo);
+        }*/
     }
 
     // �� Ȥ�� �������� ������ ������ ��

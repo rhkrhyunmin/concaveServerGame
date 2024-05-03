@@ -8,6 +8,8 @@ using UnityEngine;
 public class Bingo : MonoBehaviour
 {
 
+    public static Bingo Instance { get; } = new Bingo();
+
     // 게임 진행 상황.
     private enum GameProgress
     {
@@ -100,6 +102,7 @@ public class Bingo : MonoBehaviour
 
     //사람 이름 입력
     public TMP_InputField _NameInputField;
+    public TextMeshProUGUI _debugTMP;
     public GameObject cube;
 
     public BingoExSo _BingoExample;
@@ -107,6 +110,8 @@ public class Bingo : MonoBehaviour
 
     private string inputText;
     private bool isSpace = false;
+
+    private bool isMyTurn = false;
 
 
     // Use this for initialization
@@ -153,6 +158,10 @@ public class Bingo : MonoBehaviour
         {
             isSpace = false;
         }
+
+        S_Bingo s_Bingo = new S_Bingo();
+       
+
 
         inputText = _NameInputField.text;
     }
@@ -220,20 +229,20 @@ public class Bingo : MonoBehaviour
 
     void UpdateTurn()
     {
-        //Debug.Log($"턴 시작 :{turn}");
-        bool setMark = false;
         if (turn == localMark)
         {
-            setMark = DoOwnTurn();
+            //isMyTurn = DoOwnTurn();
+            S_Bingo s_Bingo = new S_Bingo();
+            //s_Bingo.Read();
         }
         else
         {
-            setMark = DoOpponentTurn();
+            isMyTurn = DoOpponentTurn();
             //둘 수 없을 때 누르면 클릭용 사운드 효과를 냅니다.
             
         }
 
-        if (setMark == false)
+        if (isMyTurn == false)
         {
             // 놓을 곳을 검토 중입니다.	
             return;
@@ -261,7 +270,7 @@ public class Bingo : MonoBehaviour
 
         // 턴을 갱신합니다.
 
-        Debug.Log($"턴 갱신 :{turn}");
+        //Debug.Log($"턴 갱신 :{turn}");
 
 
         timer = turnTime;
@@ -300,12 +309,9 @@ public class Bingo : MonoBehaviour
                             int bingoValue;
                             if (int.TryParse(inputText, out bingoValue))
                             {
-                                movePacket.StonePosition = bingoValue;
+                                movePacket.c_bingo = bingoValue;
                                 network.Send(movePacket.Write());
                             }
-                            
-                            
-
                             return true;
                         }
                         else
@@ -342,16 +348,6 @@ public class Bingo : MonoBehaviour
 
         Numcheck();
 
-        // _NameInputField에서 사용자가 입력한 값을 int로 변환하여 index에 할당
-        /*int index = int.Parse(_NameInputField.text);
-
-        List<int> values = new List<int>();
-
-        // 선택된 인덱스로 데이터 패킷을 생성하여 서버로 전송합니다.
-        C_RandomIndex movePacket = new C_RandomIndex();
-        movePacket.StoneInfo = (index, values);
-        network.Send(movePacket.Write());*/
-
         return true;
     }
 
@@ -359,16 +355,6 @@ public class Bingo : MonoBehaviour
     bool DoOpponentTurn()
     {
         _NameInputField.interactable = false;
-        /*Numcheck();*/
-
-        //여기가 뭔가 이상한 거 같음 maybe?
-        //int index = PlayerManager.Instance.returnStone();
-
-        /*if (index <= 0)
-        {
-            Debug.Log($"수신된 값 : {index}");
-            return false;
-        }*/
 
         if (isSpace == true)
         {
@@ -472,7 +458,6 @@ public class Bingo : MonoBehaviour
                 float py = top + y * sy / divide;
 
                 Texture texture = (spaces[index] == 0) ? circleTexture : crossTexture;
-                Debug.Log($"돌그리기 : {texture}");
 
                 float ofs = sx / divide * 0.1f;
                 Graphics.DrawTexture(new Rect(px + ofs, py + ofs, sx * 0.8f / divide, sy * 0.8f / divide), texture);

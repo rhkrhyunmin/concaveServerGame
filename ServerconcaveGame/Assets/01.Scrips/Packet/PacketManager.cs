@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace DummyClient
 {
@@ -36,11 +37,11 @@ namespace DummyClient
             _makeFunc.Add((ushort)PacketID.S_PlayerList, MakePacket<S_PlayerList>);
             _handler.Add((ushort)PacketID.S_PlayerList, PacketHandler.S_PlayerListHandler);
 
-           /* _makeFunc.Add((ushort)PacketID.c_Bingo, MakePacket<C_Bingo>);
-            _handler.Add((ushort)PacketID.c_Bingo, PacketHandler.C_MoveStoneHandler);*/
+            _makeFunc.Add((ushort)PacketID.C_Bingo, MakePacket<C_Bingo>);
+            _handler.Add((ushort)PacketID.C_Bingo, PacketHandler.C_BingoHandle);
 
-            /* _makeFunc.Add((ushort)PacketID.S_BroadCastStone, MakePacket<S_Bingo>);
-             _handler.Add((ushort)PacketID.S_BroadCastStone, PacketHandler.S_BroadCastStoneHandler);*/
+            /* _makeFunc.Add((ushort)PacketID.S_Bingo, MakePacket<S_Bingo>);
+             _handler.Add((ushort)PacketID.S_Bingo, PacketHandler.S_BingoHandle);*/
 
         }
 
@@ -69,7 +70,8 @@ namespace DummyClient
         T MakePacket<T>(PacketSession session, ArraySegment<byte> buffer) where T : IPacket, new()
         {
             T packet = new T();     // 패킷 만들기
-            packet.Read(buffer);    // 들어온 패킷 읽기
+            packet.Read(buffer);    // 들어온 패킷 읽기        
+            UnityEngine.Debug.Log(packet);
            
             return packet;
         }

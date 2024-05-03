@@ -17,7 +17,10 @@ namespace DummyClient
 
         C_RandomIndex = 5,
         S_BroadCastStone = 6,
-        c_Bingo = 7,
+        C_Bingo = 7,
+        S_Bingo = 8,
+        C_MyTurn = 9,
+        S_YourTurn = 9,
     }
 
     public interface IPacket
@@ -96,16 +99,18 @@ namespace DummyClient
 
     public class C_Bingo : IPacket
     {
-        public int StonePosition;
-        public ushort Protocol { get { return (ushort)PacketID.S_BroadCastStone; } }
+        public int c_bingo;
+        public ushort Protocol { get { return (ushort)PacketID.C_Bingo; } }
 
         public void Read(ArraySegment<byte> segment)
         {
             ushort count = 0;
             count += sizeof(ushort);
             count += sizeof(ushort);
-            this.StonePosition = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+            this.c_bingo = BitConverter.ToInt32(segment.Array, segment.Offset + count);
             count += sizeof(int);
+
+            UnityEngine.Debug.Log(c_bingo);
         }
 
         public ArraySegment<byte> Write()
@@ -114,9 +119,9 @@ namespace DummyClient
             ushort count = 0;
 
             count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID.S_BroadCastStone), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_Bingo), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes(this.StonePosition), 0, segment.Array, segment.Offset + count, sizeof(int));
+            Array.Copy(BitConverter.GetBytes(this.c_bingo), 0, segment.Array, segment.Offset + count, sizeof(int));
             count += sizeof(int);
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
@@ -128,17 +133,19 @@ namespace DummyClient
 
     public class S_Bingo : IPacket
     {
-        public int playerId;
+        public int s_bingoValue;
 
-        public ushort Protocol { get { return (ushort)PacketID.S_BroadcastEnterGame; } }
+        public ushort Protocol { get { return (ushort)PacketID.S_Bingo; } }
 
         public void Read(ArraySegment<byte> segment)
         {
             ushort count = 0;
             count += sizeof(ushort);
             count += sizeof(ushort);
-            this.playerId = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+            this.s_bingoValue = BitConverter.ToInt32(segment.Array, segment.Offset + count);
             count += sizeof(int);
+
+            UnityEngine.Debug.Log(s_bingoValue);
         }
 
         public ArraySegment<byte> Write()
@@ -147,9 +154,43 @@ namespace DummyClient
             ushort count = 0;
 
             count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID.S_BroadcastEnterGame), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID.S_Bingo), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes(this.playerId), 0, segment.Array, segment.Offset + count, sizeof(int));
+            Array.Copy(BitConverter.GetBytes(this.s_bingoValue), 0, segment.Array, segment.Offset + count, sizeof(int));
+            count += sizeof(int);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
+    public class C_Turn : IPacket
+    {
+        public bool _playerOneTurn;
+
+        public ushort Protocol { get { return (ushort)PacketID.C_MyTurn; } }
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            ushort count = 0;
+            count += sizeof(ushort);
+            count += sizeof(ushort);
+            //this._myTurn = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+            count += sizeof(int);
+
+            UnityEngine.Debug.Log(_playerOneTurn);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID.S_Bingo), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(this._playerOneTurn), 0, segment.Array, segment.Offset + count, sizeof(int));
             count += sizeof(int);
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
