@@ -6,7 +6,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
+
     public RandomBingo randomBingo;
+
+    public string inputText;
+
+    public BingoCheck checkBingo;
+
     public static GameManager Instance
     {
         get

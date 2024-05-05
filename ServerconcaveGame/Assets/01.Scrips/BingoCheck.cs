@@ -2,17 +2,25 @@ using DummyClient;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BingoCheck : MonoBehaviour
 {
-    private const int Block = 3;
-    private int _idx = 0;
-    private bool[] _bingoindex = new bool[Block * Block];
+    public static BingoCheck Instance = new BingoCheck();
 
-    [SerializeField] private Image[] _image;
-    [SerializeField] private Sprite _circle;
+    [SerializeField]
+    public const int Block = 3;
+    [SerializeField]
+    public int _idx = 0;
+    public bool[] _bingoindex = new bool[Block * Block];
+
+    private bool isBingo = false;
+
+    public List<TextMeshProUGUI> Textvalue = new List<TextMeshProUGUI>();
+
+    public Sprite _circle;
 
     private void Start()
     {
@@ -22,32 +30,40 @@ public class BingoCheck : MonoBehaviour
 
     public void CheckLine(C_RandomIndex randIdx, bool value)
     {
-        // randIdx ��ü�� values ����Ʈ�� �ִ� �� ������ �ε����� ����Ͽ� _bingoindex �迭�� ���� �Ҵ��մϴ�.
-        foreach (int index in randIdx.values)
+        foreach (int numValue in randIdx.values)
         {
-            _bingoindex[index] = value; // �־��� value ���� �Ҵ��մϴ�.
-            ShowCircle(index);
+            _bingoindex[numValue] = value;
+            //ShowCircle(numValue);
         }
-
         
+    }
+
+    public void Update()
+    {
+        
+    }
+
+    public void Bingo(IPacket packet)
+    {
+        C_Bingo pkt = packet as C_Bingo;
         CheckBingo();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
+        foreach (TextMeshProUGUI textvalue in Textvalue)
         {
-            _bingoindex[_idx] = true;
-            ShowCircle(_idx);
-            print(CheckBingo());
-            _idx++;
-        }
-    }
+            if (pkt.c_bingo.ToString() == textvalue.text)
+            {
+                Debug.Log(textvalue.text);
 
-    private void ShowCircle(int idx)
-    {
-        _image[idx].enabled = true;
-        _image[idx].sprite = _circle;
+                // 해당 텍스트의 하위에 있는 이미지들을 찾아서 활성화시킴
+                
+                Image[] imagesInChildren = textvalue.GetComponentsInChildren<Image>();
+                foreach (Image image in imagesInChildren)
+                {
+                    image.enabled = true;
+                    image.sprite = _circle;
+                }
+            }
+            
+        }
     }
 
 
@@ -89,24 +105,41 @@ public class BingoCheck : MonoBehaviour
 
     private bool CheckBingo()
     {
+        Debug.Log("똥");
         for (int i = 0; i < 3; i++)
         {
-            // ���� ���� üũ
+            // 가로 라인 체크
             if (_bingoindex[i * 3] && _bingoindex[i * 3 + 1] && _bingoindex[i * 3 + 2])
+            {
+                Debug.Log("가로 라인 " + i + "에서 빙고 발견!");
+                Debug.Log("현재 _bingoindex 배열: " + string.Join(", ", _bingoindex));
                 return true;
+            }
 
-            // ���� ���� üũ
+            // 세로 라인 체크
             if (_bingoindex[i] && _bingoindex[i + 3] && _bingoindex[i + 6])
+            {
+                Debug.Log("세로 라인 " + i + "에서 빙고 발견!");
+                Debug.Log("현재 _bingoindex 배열: " + string.Join(", ", _bingoindex));
                 return true;
+            }
         }
 
-        // �밢�� ���� üũ(������ ������ ���� �Ʒ���)
+        // 대각선 라인 체크 (왼쪽 위에서 오른쪽 아래로)
         if ((_bingoindex[0] && _bingoindex[4] && _bingoindex[8]))
+        {
+            Debug.Log("왼쪽 위에서 오른쪽 아래로 대각선 라인에서 빙고 발견!");
+            Debug.Log("현재 _bingoindex 배열: " + string.Join(", ", _bingoindex));
             return true;
+        }
 
-        // �밢�� ���� üũ(���� ������ ������ �Ʒ���)
+        // 대각선 라인 체크 (오른쪽 위에서 왼쪽 아래로)
         if ((_bingoindex[2] && _bingoindex[4] && _bingoindex[6]))
+        {
+            Debug.Log("오른쪽 위에서 왼쪽 아래로 대각선 라인에서 빙고 발견!");
+            Debug.Log("현재 _bingoindex 배열: " + string.Join(", ", _bingoindex));
             return true;
+        }
 
         return false;
     }

@@ -108,7 +108,7 @@ public class Bingo : MonoBehaviour
     public BingoExSo _BingoExample;
     public RandomBingo _RandomBingo;
 
-    private string inputText;
+    
     private bool isSpace = false;
 
     private bool isMyTurn = false;
@@ -163,7 +163,7 @@ public class Bingo : MonoBehaviour
        
 
 
-        inputText = _NameInputField.text;
+        GameManager.Instance.inputText = _NameInputField.text;
     }
 
     // 게임 시작, 외부 UI에서 호출함.
@@ -231,13 +231,13 @@ public class Bingo : MonoBehaviour
     {
         if (turn == localMark)
         {
-            //isMyTurn = DoOwnTurn();
+            isMyTurn = DoOwnTurn();
             S_Bingo s_Bingo = new S_Bingo();
             //s_Bingo.Read();
         }
         else
         {
-            isMyTurn = DoOpponentTurn();
+            //isMyTurn = DoOpponentTurn();
             //둘 수 없을 때 누르면 클릭용 사운드 효과를 냅니다.
             
         }
@@ -297,17 +297,17 @@ public class Bingo : MonoBehaviour
                 if (_RandomBingo.selectedItems != null && _RandomBingo.selectedItems.Count > 0)
                 {
                     List<string> selectedItems = _RandomBingo.selectedItems;
-                    if (selectedItems.Contains(inputText))
+                    if (selectedItems.Contains(GameManager.Instance.inputText))
                     {
                         Debug.Log("입력한 이름이 리스트에 있습니다.");
                         cube.SetActive(true);
 
                         // 입력된 문자열을 정수로 변환하여 index 변수에 저장합니다.
-                        if (int.TryParse(inputText, out int index))
+                        if (int.TryParse(GameManager.Instance.inputText, out int index))
                         {
                             C_Bingo movePacket = new C_Bingo();
                             int bingoValue;
-                            if (int.TryParse(inputText, out bingoValue))
+                            if (int.TryParse(GameManager.Instance.inputText, out bingoValue))
                             {
                                 movePacket.c_bingo = bingoValue;
                                 network.Send(movePacket.Write());
@@ -344,7 +344,7 @@ public class Bingo : MonoBehaviour
     // 자신의 턴일 때의 처리.
     bool DoOwnTurn()
     {
-        _NameInputField.interactable = true;
+        //_NameInputField.interactable = true;
 
         Numcheck();
 
@@ -354,7 +354,7 @@ public class Bingo : MonoBehaviour
     // 상대의 턴일 때의 처리.
     bool DoOpponentTurn()
     {
-        _NameInputField.interactable = false;
+        //_NameInputField.interactable = false;
 
         if (isSpace == true)
         {

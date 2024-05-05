@@ -40,19 +40,16 @@ namespace DummyClient
             C_Bingo pkt = packet as C_Bingo;
             ServerSession serverSession = session as ServerSession;
 
-            
-
             UnityEngine.Debug.Log(pkt.c_bingo);
             
             string c_bingoAsString = pkt.c_bingo.ToString();
-            Debug.Log(GameManager.Instance.randomBingo.selectedItems);
             if(GameManager.Instance.randomBingo.selectedItems.Contains(c_bingoAsString))
             {
-                Debug.Log("¾ßÈ£");
+                GameManager.Instance.checkBingo.Bingo(packet);
             }
             else
             {
-                Debug.Log("º±½Å");
+
             }
             
         }

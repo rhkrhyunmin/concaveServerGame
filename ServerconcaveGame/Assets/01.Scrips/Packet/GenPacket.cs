@@ -33,6 +33,7 @@ namespace DummyClient
     public class C_RandomIndex : IPacket
     {
         public List<int> values { get; } = new List<int>();
+        public int Numvalue = 0;
 
         public ushort Protocol { get { return (ushort)PacketID.C_RandomIndex; } }
 
@@ -42,28 +43,16 @@ namespace DummyClient
 
             // 패킷 ID를 건너뜁니다.
             count += sizeof(ushort);
-
-            // 값들의 개수를 읽어들입니다.
-            /* int valueCount = BitConverter.ToInt32(segment.Array, segment.Offset + count);*/
             count += sizeof(ushort);
-            // Console.WriteLine(valueCount);
 
 
             // 각 값을 읽어들입니다.
             for (int i = 0; i < 9; i++)
             {
-                /*// 값의 길이를 읽어들입니다.
-                int valueLength = BitConverter.ToInt32(segment.Array, segment.Offset + count);
-                ;*/
-
-                // 값 자체를 읽어들여 문자열로 변환합니다.
-                int value = BitConverter.ToInt32(segment.Array, segment.Offset + count);
-                this.values.Add(value);
-                Console.WriteLine(value);
+                Numvalue = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+                this.values.Add(Numvalue);
+                Console.WriteLine(Numvalue);
                 count += sizeof(int);
-
-                // 다음 값의 위치로 이동합니다.
-                //count += valueLength;
 
             }
         }
@@ -110,7 +99,7 @@ namespace DummyClient
             this.c_bingo = BitConverter.ToInt32(segment.Array, segment.Offset + count);
             count += sizeof(int);
 
-            UnityEngine.Debug.Log(c_bingo);
+            //UnityEngine.Debug.Log(c_bingo);
         }
 
         public ArraySegment<byte> Write()
