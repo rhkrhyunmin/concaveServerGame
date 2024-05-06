@@ -158,8 +158,6 @@ public class Bingo : MonoBehaviour
         {
             isSpace = false;
         }
-
-        S_Bingo s_Bingo = new S_Bingo();
        
 
 
@@ -205,8 +203,7 @@ public class Bingo : MonoBehaviour
             if (int.TryParse(item, out parsedValue))
             {
                 movePacketArray.values.Add(parsedValue);
-                Debug.Log(parsedValue);
-                
+                Debug.Log(parsedValue);   
             }
             else
             {
@@ -232,7 +229,6 @@ public class Bingo : MonoBehaviour
         if (turn == localMark)
         {
             isMyTurn = DoOwnTurn();
-            S_Bingo s_Bingo = new S_Bingo();
             //s_Bingo.Read();
         }
         else

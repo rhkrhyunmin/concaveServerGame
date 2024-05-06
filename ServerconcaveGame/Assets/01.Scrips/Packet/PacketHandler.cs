@@ -39,19 +39,12 @@ namespace DummyClient
         {
             C_Bingo pkt = packet as C_Bingo;
             ServerSession serverSession = session as ServerSession;
-
-            UnityEngine.Debug.Log(pkt.c_bingo);
             
             string c_bingoAsString = pkt.c_bingo.ToString();
             if(GameManager.Instance.randomBingo.selectedItems.Contains(c_bingoAsString))
             {
                 GameManager.Instance.checkBingo.Bingo(packet);
-            }
-            else
-            {
-
-            }
-            
+            }  
         }
 
         public static void S_BroadCastStoneHandler(PacketSession session, IPacket packet)

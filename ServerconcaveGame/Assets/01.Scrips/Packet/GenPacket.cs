@@ -41,6 +41,8 @@ namespace DummyClient
         {
             int count = 0;
 
+            UnityEngine.Debug.Log(values.Count);
+
             // 패킷 ID를 건너뜁니다.
             count += sizeof(ushort);
             count += sizeof(ushort);
@@ -51,7 +53,7 @@ namespace DummyClient
             {
                 Numvalue = BitConverter.ToInt32(segment.Array, segment.Offset + count);
                 this.values.Add(Numvalue);
-                Console.WriteLine(Numvalue);
+                
                 count += sizeof(int);
 
             }
@@ -74,6 +76,7 @@ namespace DummyClient
             {
                 // 값 자체를 전송합니다.
                 Array.Copy(BitConverter.GetBytes(value), 0, segment.Array, segment.Offset + count, sizeof(int));
+                //UnityEngine.Debug.Log(Numvalue);
                 count += sizeof(int);
             }
 
@@ -120,7 +123,7 @@ namespace DummyClient
     }
 
 
-    public class S_Bingo : IPacket
+    public class C_EndText : IPacket
     {
         public int s_bingoValue;
 

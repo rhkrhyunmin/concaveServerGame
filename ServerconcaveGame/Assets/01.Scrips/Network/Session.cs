@@ -38,7 +38,7 @@ namespace ServerCore
                 // 현재까지 처리한 패킷의 데이터를 버퍼에서 제거하고 남은 데이터를 새로운 버퍼에 할당
                 buffer = new ArraySegment<byte>(
                     buffer.Array, buffer.Offset + dataSize, buffer.Count - dataSize);
-                UnityEngine.Debug.Log(buffer); 
+                //UnityEngine.Debug.Log(buffer); 
             }
             // 현재까지 처리한 누적 데이터 크기 반환
             return processLen;

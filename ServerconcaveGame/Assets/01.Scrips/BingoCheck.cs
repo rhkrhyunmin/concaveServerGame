@@ -22,44 +22,33 @@ public class BingoCheck : MonoBehaviour
 
     public Sprite _circle;
 
+    public TextMeshProUGUI endText;
+
     private void Start()
     {
         for (int i = 0; i < _bingoindex.Length; i++)
             _bingoindex[i] = false;
     }
 
-    public void CheckLine(C_RandomIndex randIdx, bool value)
-    {
-        foreach (int numValue in randIdx.values)
-        {
-            _bingoindex[numValue] = value;
-            //ShowCircle(numValue);
-        }
-        
-    }
-
-    public void Update()
-    {
-        
-    }
-
     public void Bingo(IPacket packet)
     {
         C_Bingo pkt = packet as C_Bingo;
-        CheckBingo();
-        foreach (TextMeshProUGUI textvalue in Textvalue)
+        for(int i = 0; i < Textvalue.Count; i++)
         {
-            if (pkt.c_bingo.ToString() == textvalue.text)
+            if (pkt.c_bingo.ToString() == Textvalue[i].text)
             {
-                Debug.Log(textvalue.text);
+                Debug.Log(Textvalue[i].text);
 
                 // 해당 텍스트의 하위에 있는 이미지들을 찾아서 활성화시킴
                 
-                Image[] imagesInChildren = textvalue.GetComponentsInChildren<Image>();
+                Image[] imagesInChildren = Textvalue[i].GetComponentsInChildren<Image>();
                 foreach (Image image in imagesInChildren)
                 {
                     image.enabled = true;
                     image.sprite = _circle;
+                    _bingoindex[i] = true;
+
+                    CheckBingo();
                 }
             }
             
@@ -105,22 +94,19 @@ public class BingoCheck : MonoBehaviour
 
     private bool CheckBingo()
     {
-        Debug.Log("똥");
         for (int i = 0; i < 3; i++)
         {
             // 가로 라인 체크
             if (_bingoindex[i * 3] && _bingoindex[i * 3 + 1] && _bingoindex[i * 3 + 2])
             {
-                Debug.Log("가로 라인 " + i + "에서 빙고 발견!");
-                Debug.Log("현재 _bingoindex 배열: " + string.Join(", ", _bingoindex));
+                endText.text = "승리";
                 return true;
             }
 
             // 세로 라인 체크
             if (_bingoindex[i] && _bingoindex[i + 3] && _bingoindex[i + 6])
             {
-                Debug.Log("세로 라인 " + i + "에서 빙고 발견!");
-                Debug.Log("현재 _bingoindex 배열: " + string.Join(", ", _bingoindex));
+                endText.text = "승리";
                 return true;
             }
         }
@@ -128,16 +114,14 @@ public class BingoCheck : MonoBehaviour
         // 대각선 라인 체크 (왼쪽 위에서 오른쪽 아래로)
         if ((_bingoindex[0] && _bingoindex[4] && _bingoindex[8]))
         {
-            Debug.Log("왼쪽 위에서 오른쪽 아래로 대각선 라인에서 빙고 발견!");
-            Debug.Log("현재 _bingoindex 배열: " + string.Join(", ", _bingoindex));
+            endText.text = "승리";
             return true;
         }
 
         // 대각선 라인 체크 (오른쪽 위에서 왼쪽 아래로)
         if ((_bingoindex[2] && _bingoindex[4] && _bingoindex[6]))
         {
-            Debug.Log("오른쪽 위에서 왼쪽 아래로 대각선 라인에서 빙고 발견!");
-            Debug.Log("현재 _bingoindex 배열: " + string.Join(", ", _bingoindex));
+            endText.text = "승리";
             return true;
         }
 
