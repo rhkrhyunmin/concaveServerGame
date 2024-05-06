@@ -47,6 +47,14 @@ namespace DummyClient
             }  
         }
 
+        public static void C_EndTextHandle(PacketSession session, IPacket packet)
+        {
+            C_EndText pkt = packet as C_EndText;
+            ServerSession serverSession = session as ServerSession;
+
+            string victoryText = pkt.endText;
+        }
+
         public static void S_BroadCastStoneHandler(PacketSession session, IPacket packet)
         {
             S_BroadcastEnterGame pkt = packet as S_BroadcastEnterGame;

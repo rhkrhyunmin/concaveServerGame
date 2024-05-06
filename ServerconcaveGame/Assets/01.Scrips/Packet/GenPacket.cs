@@ -125,37 +125,49 @@ namespace DummyClient
 
     public class C_EndText : IPacket
     {
-        public int s_bingoValue;
+        public string endText;
 
         public ushort Protocol { get { return (ushort)PacketID.S_Bingo; } }
 
         public void Read(ArraySegment<byte> segment)
         {
             ushort count = 0;
+            count += sizeof(ushort); // Skip Protocol field
+            count += sizeof(ushort); // Skip string length field
+            ushort stringLength = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
             count += sizeof(ushort);
-            count += sizeof(ushort);
-            this.s_bingoValue = BitConverter.ToInt32(segment.Array, segment.Offset + count);
-            count += sizeof(int);
-
-            UnityEngine.Debug.Log(s_bingoValue);
+            this.endText = Encoding.UTF8.GetString(segment.Array, segment.Offset + count, stringLength);
+            UnityEngine.Debug.Log(endText);
         }
 
         public ArraySegment<byte> Write()
         {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort stringLength = (ushort)Encoding.UTF8.GetByteCount(this.endText);
+            ushort packetLength = (ushort)(sizeof(ushort) + sizeof(ushort) + stringLength); // Protocol + string length + string
+
+            ArraySegment<byte> segment = SendBufferHelper.Open(packetLength);
             ushort count = 0;
 
+            // Write packet length
+            Array.Copy(BitConverter.GetBytes(packetLength), 0, segment.Array, segment.Offset, sizeof(ushort));
             count += sizeof(ushort);
+
+            // Write Protocol
             Array.Copy(BitConverter.GetBytes((ushort)PacketID.S_Bingo), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes(this.s_bingoValue), 0, segment.Array, segment.Offset + count, sizeof(int));
-            count += sizeof(int);
 
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+            // Write string length
+            Array.Copy(BitConverter.GetBytes(stringLength), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
 
-            return SendBufferHelper.Close(count);
+            // Write string data
+            Encoding.UTF8.GetBytes(this.endText, 0, this.endText.Length, segment.Array, segment.Offset + count);
+            count += stringLength;
+
+            return SendBufferHelper.Close(packetLength);
         }
     }
+
 
     public class C_Turn : IPacket
     {

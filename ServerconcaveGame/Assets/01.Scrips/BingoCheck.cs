@@ -2,6 +2,7 @@ using DummyClient;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ using UnityEngine.UI;
 public class BingoCheck : MonoBehaviour
 {
     public static BingoCheck Instance = new BingoCheck();
+    private NetworkManager network = null;
 
     [SerializeField]
     public const int Block = 3;
@@ -26,8 +28,17 @@ public class BingoCheck : MonoBehaviour
 
     private void Start()
     {
+        endText.text = "승리";
+        endText.gameObject.SetActive(false);
         for (int i = 0; i < _bingoindex.Length; i++)
             _bingoindex[i] = false;
+
+        GameObject obj = GameObject.Find("NetworkManager");
+        network = obj.GetComponent<NetworkManager>();
+        if (network != null)
+        {
+            //network.RegisterEventHandler(EventCallback);
+        }
     }
 
     public void Bingo(IPacket packet)
@@ -94,19 +105,27 @@ public class BingoCheck : MonoBehaviour
 
     private bool CheckBingo()
     {
+        C_EndText c_endText = new C_EndText();
+
+        string _lossText = "패배";
+        c_endText.endText = _lossText;
+
+
         for (int i = 0; i < 3; i++)
         {
             // 가로 라인 체크
             if (_bingoindex[i * 3] && _bingoindex[i * 3 + 1] && _bingoindex[i * 3 + 2])
             {
-                endText.text = "승리";
+                endText.gameObject.SetActive(true);
+                network.Send(c_endText.Write());
                 return true;
             }
 
             // 세로 라인 체크
             if (_bingoindex[i] && _bingoindex[i + 3] && _bingoindex[i + 6])
             {
-                endText.text = "승리";
+                endText.gameObject.SetActive(true);
+                network.Send(c_endText.Write());
                 return true;
             }
         }
@@ -114,17 +133,20 @@ public class BingoCheck : MonoBehaviour
         // 대각선 라인 체크 (왼쪽 위에서 오른쪽 아래로)
         if ((_bingoindex[0] && _bingoindex[4] && _bingoindex[8]))
         {
-            endText.text = "승리";
+            endText.gameObject.SetActive(true);
+            network.Send(c_endText.Write());
             return true;
         }
 
         // 대각선 라인 체크 (오른쪽 위에서 왼쪽 아래로)
         if ((_bingoindex[2] && _bingoindex[4] && _bingoindex[6]))
         {
-            endText.text = "승리";
+            endText.gameObject.SetActive(true);
+            network.Send(c_endText.Write());
             return true;
         }
 
         return false;
     }
+
 }
