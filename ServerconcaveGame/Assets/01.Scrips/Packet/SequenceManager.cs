@@ -28,32 +28,30 @@ public class SequenceManager : MonoBehaviour
     private const int m_port = 50765;
     private int m_counter = 0;
 
-    public GameObject UI_MainMenu;
-    public GameObject UI_Game;
     public NetworkManager network;
 
     public void OnClick_BtnMakeRoom()
     {
         hostType = HostType.Server;
 
-        UI_MainMenu.SetActive(false);
-        UI_Game.SetActive(true);
+        GameManager.Instance.IntroUI.SetActive(false);
+        GameManager.Instance.PlayUI.SetActive(true);
     }
 
     public void OnClick_BtnEnterRoom()
     {
         hostType = HostType.Client;
 
-        UI_MainMenu.SetActive(false);
-        UI_Game.SetActive(true);
+        GameManager.Instance.IntroUI.SetActive(false);
+        GameManager.Instance.PlayUI.SetActive(true);
     }
     public void OnClick_Exit()
     {
         hostType = HostType.None;
         m_mode = Mode.Disconnection;
 
-        UI_MainMenu.SetActive(true);
-        UI_Game.SetActive(false);
+        GameManager.Instance.IntroUI.SetActive(true);
+        GameManager.Instance.PlayUI.SetActive(false);
     }
 
 

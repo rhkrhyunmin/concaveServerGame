@@ -28,7 +28,7 @@ public class BingoCheck : MonoBehaviour
 
     private void Start()
     {
-        endText.text = "승리";
+        endText.text = "승";
         endText.gameObject.SetActive(false);
         for (int i = 0; i < _bingoindex.Length; i++)
             _bingoindex[i] = false;
@@ -107,7 +107,7 @@ public class BingoCheck : MonoBehaviour
     {
         C_EndText c_endText = new C_EndText();
 
-        string _lossText = "패배";
+        string _lossText = "패";
         c_endText.endText = _lossText;
 
 
@@ -118,6 +118,7 @@ public class BingoCheck : MonoBehaviour
             {
                 endText.gameObject.SetActive(true);
                 network.Send(c_endText.Write());
+                StartCoroutine(endGame(2f));
                 return true;
             }
 
@@ -126,6 +127,7 @@ public class BingoCheck : MonoBehaviour
             {
                 endText.gameObject.SetActive(true);
                 network.Send(c_endText.Write());
+                StartCoroutine(endGame(2f));
                 return true;
             }
         }
@@ -135,6 +137,7 @@ public class BingoCheck : MonoBehaviour
         {
             endText.gameObject.SetActive(true);
             network.Send(c_endText.Write());
+            StartCoroutine(endGame(2f));
             return true;
         }
 
@@ -143,10 +146,17 @@ public class BingoCheck : MonoBehaviour
         {
             endText.gameObject.SetActive(true);
             network.Send(c_endText.Write());
+            StartCoroutine(endGame(2f));
             return true;
         }
 
         return false;
     }
 
+    IEnumerator endGame(float delay)
+    {
+        GameManager.Instance.PlayUI.SetActive(false);
+        GameManager.Instance.IntroUI.SetActive(true);
+        yield return new WaitForSeconds(delay);
+    }
 }

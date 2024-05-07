@@ -122,7 +122,7 @@ namespace DummyClient
         }
     }
 
-
+    [System.Serializable]
     public class C_EndText : IPacket
     {
         public string endText;

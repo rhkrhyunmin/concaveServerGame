@@ -2725,8 +2725,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fba280a75f6b02b429bfa3ed797c86d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UI_MainMenu: {fileID: 2022234499}
-  UI_Game: {fileID: 1718542617}
   network: {fileID: 1445197272}
 --- !u!4 &1196732453
 Transform:
@@ -4889,6 +4887,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   randomBingo: {fileID: 1718542619}
+  PlayUI: {fileID: 1718542617}
+  IntroUI: {fileID: 2022234499}
   inputText: 
   checkBingo: {fileID: 1718542620}
 --- !u!4 &1876722672

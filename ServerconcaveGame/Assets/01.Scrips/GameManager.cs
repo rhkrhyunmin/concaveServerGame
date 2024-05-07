@@ -9,7 +9,11 @@ public class GameManager : MonoBehaviour
 
     public RandomBingo randomBingo;
 
+    public GameObject PlayUI;
+    public GameObject IntroUI;
+
     public string inputText;
+
 
     public BingoCheck checkBingo;
 
