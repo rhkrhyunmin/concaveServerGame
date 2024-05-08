@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,8 +29,8 @@ public class BingoCheck : MonoBehaviour
 
     private void Start()
     {
-        endText.text = "승";
-        endText.gameObject.SetActive(false);
+        //endText.text = "승";
+        //endText.gameObject.SetActive(false);
         for (int i = 0; i < _bingoindex.Length; i++)
             _bingoindex[i] = false;
 
@@ -39,6 +40,11 @@ public class BingoCheck : MonoBehaviour
         {
             //network.RegisterEventHandler(EventCallback);
         }
+    }
+
+    public void Update()
+    {
+        //if()
     }
 
     public void Bingo(IPacket packet)
@@ -107,7 +113,7 @@ public class BingoCheck : MonoBehaviour
     {
         C_EndText c_endText = new C_EndText();
 
-        string _lossText = "패";
+        string _lossText = "패배";
         c_endText.endText = _lossText;
 
 
@@ -116,18 +122,16 @@ public class BingoCheck : MonoBehaviour
             // 가로 라인 체크
             if (_bingoindex[i * 3] && _bingoindex[i * 3 + 1] && _bingoindex[i * 3 + 2])
             {
-                endText.gameObject.SetActive(true);
+                GameManager.Instance.isWin = true;
                 network.Send(c_endText.Write());
-                StartCoroutine(endGame(2f));
                 return true;
             }
 
             // 세로 라인 체크
             if (_bingoindex[i] && _bingoindex[i + 3] && _bingoindex[i + 6])
             {
-                endText.gameObject.SetActive(true);
+                GameManager.Instance.isWin = true;
                 network.Send(c_endText.Write());
-                StartCoroutine(endGame(2f));
                 return true;
             }
         }
@@ -135,28 +139,40 @@ public class BingoCheck : MonoBehaviour
         // 대각선 라인 체크 (왼쪽 위에서 오른쪽 아래로)
         if ((_bingoindex[0] && _bingoindex[4] && _bingoindex[8]))
         {
-            endText.gameObject.SetActive(true);
+            GameManager.Instance.isWin = true;
             network.Send(c_endText.Write());
-            StartCoroutine(endGame(2f));
+            
             return true;
         }
 
         // 대각선 라인 체크 (오른쪽 위에서 왼쪽 아래로)
         if ((_bingoindex[2] && _bingoindex[4] && _bingoindex[6]))
         {
-            endText.gameObject.SetActive(true);
+            GameManager.Instance.isWin = true;
             network.Send(c_endText.Write());
-            StartCoroutine(endGame(2f));
             return true;
         }
 
         return false;
     }
 
+    public void LossGame()
+    {
+        endText.text = "패배";
+        StartCoroutine(endGame(4f));
+       
+    }
+
+    public void WinGame()
+    {
+        endText.text = "승리";
+        StartCoroutine(endGame(4f));
+    }
+
     IEnumerator endGame(float delay)
     {
-        GameManager.Instance.PlayUI.SetActive(false);
-        GameManager.Instance.IntroUI.SetActive(true);
         yield return new WaitForSeconds(delay);
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

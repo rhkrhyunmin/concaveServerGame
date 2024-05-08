@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
 
 
     public BingoCheck checkBingo;
+    public bool isWin = false;
 
     public static GameManager Instance
     {

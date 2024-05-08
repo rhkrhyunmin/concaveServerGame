@@ -53,6 +53,16 @@ namespace DummyClient
             ServerSession serverSession = session as ServerSession;
 
             string victoryText = pkt.endText;
+
+            if(pkt.endText == victoryText && GameManager.Instance.isWin == false)
+            {
+                GameManager.Instance.checkBingo.LossGame();
+            }
+
+            else if(pkt.endText == victoryText && GameManager.Instance.isWin == true)
+            {
+                GameManager.Instance.checkBingo.WinGame();
+            }
         }
 
         public static void S_BroadCastStoneHandler(PacketSession session, IPacket packet)

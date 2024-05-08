@@ -40,6 +40,9 @@ namespace DummyClient
             _makeFunc.Add((ushort)PacketID.C_Bingo, MakePacket<C_Bingo>);
             _handler.Add((ushort)PacketID.C_Bingo, PacketHandler.C_BingoHandle);
 
+            _makeFunc.Add((ushort)PacketID.C_EndText, MakePacket<C_EndText>);
+            _handler.Add((ushort)PacketID.C_EndText, PacketHandler.C_EndTextHandle);
+
             /* _makeFunc.Add((ushort)PacketID.S_Bingo, MakePacket<S_Bingo>);
              _handler.Add((ushort)PacketID.S_Bingo, PacketHandler.S_BingoHandle);*/
 

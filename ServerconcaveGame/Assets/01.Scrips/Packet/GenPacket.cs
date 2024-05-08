@@ -19,8 +19,8 @@ namespace DummyClient
         S_BroadCastStone = 6,
         C_Bingo = 7,
         S_Bingo = 8,
-        C_MyTurn = 9,
-        S_YourTurn = 9,
+        C_EndText = 9,
+        S_EndText = 10,
     }
 
     public interface IPacket
@@ -121,55 +121,51 @@ namespace DummyClient
             return SendBufferHelper.Close(count);
         }
     }
-
-    [System.Serializable]
-    public class C_EndText : IPacket
+    
+    class C_EndText : IPacket
     {
         public string endText;
 
-        public ushort Protocol { get { return (ushort)PacketID.S_Bingo; } }
+        public ushort Protocol { get { return (ushort)PacketID.C_EndText; } }
 
         public void Read(ArraySegment<byte> segment)
         {
             ushort count = 0;
-            count += sizeof(ushort); // Skip Protocol field
-            count += sizeof(ushort); // Skip string length field
-            ushort stringLength = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            // packetID
             count += sizeof(ushort);
-            this.endText = Encoding.UTF8.GetString(segment.Array, segment.Offset + count, stringLength);
-            UnityEngine.Debug.Log(endText);
+            // Size
+            count += sizeof(ushort);
+            ushort chatLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            // chat Length 
+            count += sizeof(ushort);
+            this.endText = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, chatLen);
+            // Real chat Length
+            count += chatLen;
         }
 
         public ArraySegment<byte> Write()
         {
-            ushort stringLength = (ushort)Encoding.UTF8.GetByteCount(this.endText);
-            ushort packetLength = (ushort)(sizeof(ushort) + sizeof(ushort) + stringLength); // Protocol + string length + string
-
-            ArraySegment<byte> segment = SendBufferHelper.Open(packetLength);
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
             ushort count = 0;
-
-            // Write packet length
-            Array.Copy(BitConverter.GetBytes(packetLength), 0, segment.Array, segment.Offset, sizeof(ushort));
+            // packetID
             count += sizeof(ushort);
-
-            // Write Protocol
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID.S_Bingo), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID.C_EndText), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            // Size
             count += sizeof(ushort);
-
-            // Write string length
-            Array.Copy(BitConverter.GetBytes(stringLength), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            ushort chatLen = (ushort)Encoding.Unicode.GetBytes(this.endText, 0, this.endText.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(chatLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            // chat Length
             count += sizeof(ushort);
+            // Real chat Length
+            count += chatLen;
 
-            // Write string data
-            Encoding.UTF8.GetBytes(this.endText, 0, this.endText.Length, segment.Array, segment.Offset + count);
-            count += stringLength;
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 
-            return SendBufferHelper.Close(packetLength);
+            return SendBufferHelper.Close(count);
         }
     }
 
-
-    public class C_Turn : IPacket
+    /*public class C_Turn : IPacket
     {
         public bool _playerOneTurn;
 
@@ -201,7 +197,7 @@ namespace DummyClient
 
             return SendBufferHelper.Close(count);
         }
-    }
+    }*/
 
     public class S_BroadcastEnterGame : IPacket
     {
