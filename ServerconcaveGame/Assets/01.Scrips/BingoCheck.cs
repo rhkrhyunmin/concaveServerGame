@@ -29,17 +29,12 @@ public class BingoCheck : MonoBehaviour
 
     private void Start()
     {
-        //endText.text = "승";
-        //endText.gameObject.SetActive(false);
+
         for (int i = 0; i < _bingoindex.Length; i++)
             _bingoindex[i] = false;
 
         GameObject obj = GameObject.Find("NetworkManager");
         network = obj.GetComponent<NetworkManager>();
-        if (network != null)
-        {
-            //network.RegisterEventHandler(EventCallback);
-        }
     }
 
     public void Update()

@@ -231,12 +231,6 @@ public class Bingo : MonoBehaviour
             isMyTurn = DoOwnTurn();
             //s_Bingo.Read();
         }
-        else
-        {
-            //isMyTurn = DoOpponentTurn();
-            //둘 수 없을 때 누르면 클릭용 사운드 효과를 냅니다.
-            
-        }
 
         if (isMyTurn == false)
         {
@@ -248,8 +242,6 @@ public class Bingo : MonoBehaviour
             //기호가 놓이는 사운드 효과를 냅니다. 
         }
 
-        // 기호의 나열을 체크합니다.
-        //winner = CheckInPlacingMarks();
         if (winner != Winner.None)
         {
             //승리한 경우는 사운드효과를 냅니다.
@@ -310,27 +302,9 @@ public class Bingo : MonoBehaviour
                             }
                             return true;
                         }
-                        else
-                        {
-                            Debug.LogError("입력한 값이 정수로 변환할 수 없습니다.");
-                        }
                     }
-                    else
-                    {
-                        Debug.Log("입력한 이름이 리스트에 없습니다.");
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning("선택된 아이템이 없거나, selectedItems 리스트가 null입니다.");
                 }
             }
-        }
-
-
-        if (isSpace == false)
-        {
-            
         }
 
         return false;
@@ -347,77 +321,6 @@ public class Bingo : MonoBehaviour
         return true;
     }
 
-    // 상대의 턴일 때의 처리.
-    bool DoOpponentTurn()
-    {
-        //_NameInputField.interactable = false;
-
-        if (isSpace == true)
-        {
-            Numcheck();
-            
-            return true;
-        }
-
-        //Mark mark = (network.IsServer() == true) ? Mark.Cross : Mark.Circle;
-
-        return true;
-    }
-
-
-    // 
-    int ConvertPositionToIndex(Vector3 pos)
-    {
-        float sx = SPACES_WIDTH;
-        float sy = SPACES_HEIGHT;
-
-        // 맆드 왼쪽 위 모퉁이를 기점으로 한 좌표계로 변환합니다.
-        float left = ((float)Screen.width - sx) * 0.5f;
-        float top = ((float)Screen.height + sy) * 0.5f;
-
-        float px = pos.x - left;
-        float py = top - pos.y;
-
-        if (px < 0.0f || px > sx)
-        {
-            // 필드 밖입니다.
-            return -1;
-        }
-
-        if (py < 0.0f || py > sy)
-        {
-            // 필드 밖입니다.
-            return -1;
-        }
-
-        // 인덱스 번호로 변환합니다.
-        float divide = (float)rowNum;
-        int hIndex = (int)(px * divide / sx);
-        int vIndex = (int)(py * divide / sy);
-
-        int index = vIndex * rowNum + hIndex;
-
-        return index;
-    }
-
-    // 
-    /*bool SetMarkToSpace(int index, Mark mark)
-    {
-        //Debug.Log($"스페이스인덱스{spaces[index]}");
-        if (spaces[index] == -1)
-        {
-            // -1은 미선택된 칸임을 뜻함.
-            spaces[index] = (int)mark;
-            DrawFieldAndMarks();
-            Debug.Log($"스페이스인덱스 변경");
-            return true;
-        }
-
-        // 이미 놓여 있습니다.
-        return false;
-    }*/
-
-
     // 게임 리셋.
     void Reset()
     {
@@ -431,56 +334,6 @@ public class Bingo : MonoBehaviour
             spaces[i] = -1;
         }
     }
-
-
-    // 필드와 기호를 그립니다.
-    void DrawFieldAndMarks()
-    {
-        float sx = SPACES_WIDTH;
-        float sy = SPACES_HEIGHT;
-        float left = ((float)Screen.width - sx) * 0.5f;
-        float top = ((float)Screen.height - sy) * 0.5f;
-
-        // 기호를 그립니다. 
-        for (int index = 0; index < spaces.Length; ++index)
-        {
-            if (spaces[index] != -1)
-            {
-                int x = index % rowNum;
-                int y = index / rowNum;
-
-                float divide = (float)rowNum;
-                float px = left + x * sx / divide;
-                float py = top + y * sy / divide;
-
-                Texture texture = (spaces[index] == 0) ? circleTexture : crossTexture;
-
-                float ofs = sx / divide * 0.1f;
-                Graphics.DrawTexture(new Rect(px + ofs, py + ofs, sx * 0.8f / divide, sy * 0.8f / divide), texture);
-
-            }
-        }
-
-        // 순서 텍스처 표시.
-        /*
-        if (localMark == turn)
-        {
-            float offset = (localMark == Mark.Circle) ? -94.0f : sx + 36.0f;
-            rect = new Rect(left + offset, top + 5.0f, 68.0f, 136.0f);
-            Graphics.DrawTexture(rect, youTexture);
-        }
-        */
-    }
-
-
-    // 끊김 통지.
-    void NotifyDisconnection()
-    {
-        string message = "회선이 끊겼습니다.\n\n버튼을 누르세요.";
-
-    }
-
-
 
     // 게임 종료 체크.
     public bool IsGameOver()
