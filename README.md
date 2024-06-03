@@ -34,7 +34,9 @@ Unity 패킷을 이용하여 만든 멀티 빙고 게임입니다
 ## 설치
 
 - https://drive.google.com/drive/u/0/folders/1AJp2wePaAhFNU6_QgvAu1DwtWIbpH_YX
+
 다운로드 링크 입니다.
+
 -서버를 켜야 실행이 됩니다.
 
 
